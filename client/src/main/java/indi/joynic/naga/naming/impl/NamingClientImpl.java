@@ -1,7 +1,9 @@
-package indi.joynic.naga;
+package indi.joynic.naga.naming.impl;
 
+import indi.joynic.naga.ServerNode;
 import indi.joynic.naga.lb.LoadBalancer;
-import indi.joynic.naga.lb.impl.NagaLoadBalancer;
+import indi.joynic.naga.lb.impl.LoadBalancerImpl;
+import indi.joynic.naga.naming.NamingClient;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -9,9 +11,15 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 /**
- * Client connects server to fetch service host:port by specifying service name
+ * Client that connects naming-server to fetch service host:port by specifying a service name.
+ * Each naming-server host:port has its own weight.
+ *
+ * NOTICE: all time unit is MILLISECOND
+ *
+ * @author Terrance Fung
+ * @since 1.0
  */
-public class NamingClient {
+public class NamingClientImpl implements NamingClient {
     private final static int DEFAULT_CONNECT_TIMEOUT = 2000;
     private final static int DEFAULT_RPC_TIMEOUT = 3000;
     private final static int DEFAULT_HEARTBEAT_INTERVAL = 1000;
@@ -25,22 +33,15 @@ public class NamingClient {
 //    private Connector
     private LoadBalancer loadBalancer;
 
-    private List<InetSocketAddressWrapper> addressWrappers;
+//    private List<InetSocketAddressWrapper> addressWrappers;
 
-    public NamingClient(List<InetSocketAddress> addressList, int[] weights) {
+    public NamingClientImpl(List<InetSocketAddress> addressList, int[] weights) {
         if (null == addressList) {
             throw new NullPointerException("invalid address list");
         }
+    }
 
-        for (int i = 0; i < addressList.size(); i ++) {
-
-            InetSocketAddressWrapper inetSocketAddressWrapper
-                    = new InetSocketAddressWrapper(addressList.get(i), (i + 1), weights[i]);
-
-            addressWrappers.add(inetSocketAddressWrapper);
-
-        }
-
+    public NamingClientImpl(List<InetSocketAddress> addressList) {
 
     }
 
@@ -48,7 +49,7 @@ public class NamingClient {
      * @param hostPortWeights
      * @param connnectTimeout
      */
-    public NamingClient(String hostPortWeights, int connnectTimeout) {
+    public NamingClientImpl(String hostPortWeights, int connnectTimeout) {
         if (null == hostPortWeights) {
             throw new NullPointerException("null hostPortWeights!");
         }
@@ -78,21 +79,26 @@ public class NamingClient {
 
             inetSocketAddressList.add(new InetSocketAddress(host, port));
         }
-
-        // do connect to server
-        connect();
     }
 
     /**
-     * connect to naga-server
+     * connect to naming-server to fetch service provider list
      */
     private Future<Boolean> connect() {
         return null;
     }
 
+    public boolean register() {
+
+    }
+
+    public boolean unregister() {
+
+    }
+
     public ServerNode getNextServerNode() {
         if (null == loadBalancer) {
-            loadBalancer = new NagaLoadBalancer();
+            loadBalancer = new LoadBalancerImpl();
         }
 
         return loadBalancer.getNextServerNode();

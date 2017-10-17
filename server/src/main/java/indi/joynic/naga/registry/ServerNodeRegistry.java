@@ -1,11 +1,35 @@
 package indi.joynic.naga.registry;
 
-import java.util.List;
+import indi.joynic.naga.Registry;
+import indi.joynic.naga.ServerNode;
 
 /**
- * Created by xiaolei on 2017/10/6.
+ * Server-side registry
+ *
+ * In consideration of registry storage failing, server node must register itself automatically and continuously.
+ *
+ * The newly registered node will be put into healing pool immediately, existed node do nothing
+ *
+ * @author Terrance Fung
+ * @since 1.0
  */
-public class ServerNodeRegistry {
-    private List<ServerNode> serverNodeList;
+public interface ServerNodeRegistry extends Registry {
 
+    /**
+     * register one service provider to this service
+     *
+     * @param serviceName
+     * @param serverNode
+     * @return
+     */
+    boolean register(String serviceName, ServerNode serverNode);
+
+    /**
+     * service provider unbind this server node from registry for maintenance purpose etc.
+     *
+     * @param serviceName
+     * @param serverNode
+     * @return
+     */
+    boolean unregister(String serviceName, ServerNode serverNode);
 }

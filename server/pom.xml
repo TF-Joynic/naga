@@ -11,5 +11,14 @@
 
     <artifactId>naga-server</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>indi.joynic.naga</groupId>
+            <artifactId>lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

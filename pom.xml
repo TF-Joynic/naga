@@ -31,7 +31,14 @@
 	</properties>
 
 	<dependencyManagement>
+
 		<dependencies>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-configuration-processor</artifactId>
+				<optional>true</optional>
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.thrift</groupId>
@@ -41,6 +48,38 @@
 		</dependencies>
 	</dependencyManagement>
 
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>dev</build.profile.id>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>test</build.profile.id>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>production</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>production</build.profile.id>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<finalName>naga</finalName>
