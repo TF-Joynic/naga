@@ -14,10 +14,11 @@
 	<artifactId>naga</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<modules>
-		<module>client</module>
-		<module>server</module>
-		<module>lib</module>
-	</modules>
+		<module>naming-client</module>
+		<module>naming-server</module>
+		<module>naming-lib</module>
+        <module>naming-agent</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<name>naga</name>
