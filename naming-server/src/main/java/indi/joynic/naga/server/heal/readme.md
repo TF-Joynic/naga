@@ -1,0 +1,1 @@
+Daemon thread which heals bad server node.

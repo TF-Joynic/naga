@@ -12,7 +12,7 @@
     <artifactId>naming-client</artifactId>
 
     <properties>
-        <naga.lib.version>0.0.1-SNAPSHOT</naga.lib.version>
+        <naming.lib.version>0.0.1-SNAPSHOT</naming.lib.version>
     </properties>
 
     <dependencies>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-lib</artifactId>
-            <version>${naga.lib.version}</version>
+            <version>${naming.lib.version}</version>
         </dependency>
     </dependencies>
 

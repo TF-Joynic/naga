@@ -1,0 +1,1 @@
+Daemon thread which check server node health situation at intervals.
