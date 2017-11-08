@@ -20,5 +20,4 @@ public interface Healer {
     boolean heal(ServerNode serverNode);
 
 
-
 }

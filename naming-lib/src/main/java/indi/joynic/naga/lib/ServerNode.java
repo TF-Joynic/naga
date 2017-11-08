@@ -25,6 +25,10 @@ public class ServerNode {
         this.inetSocketAddress = address;
     }
 
+    public InetSocketAddress getInetSocketAddress() {
+        return inetSocketAddress;
+    }
+
     public int getWeight() {
         return weight;
     }
