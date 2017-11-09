@@ -25,6 +25,11 @@ public class ServerNode {
         this.inetSocketAddress = address;
     }
 
+    public static ServerNode valueOf(String ip, int port, int weight) {
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
+        return new ServerNode(inetSocketAddress, weight);
+    }
+
     public InetSocketAddress getInetSocketAddress() {
         return inetSocketAddress;
     }

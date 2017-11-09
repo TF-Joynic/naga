@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
@@ -34,6 +35,13 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, String> redisRegistryTemplate(RedisConnectionFactory redisConnectionFactory) {
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory);
+
+
+        stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        stringRedisTemplate.setValueSerializer(new StringRedisSerializer());
+
+        stringRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        stringRedisTemplate.setHashValueSerializer(new StringRedisSerializer());
         stringRedisTemplate.afterPropertiesSet();
         return stringRedisTemplate;
     }

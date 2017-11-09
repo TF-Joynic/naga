@@ -34,5 +34,7 @@ public class ServerPortalForServiceProvider implements NamingServerPortal.Iface 
         }
 
         // register to storage
+
+        return false;
     }
 }
