@@ -1,4 +1,4 @@
-package indi.joynic.naga.server.registry.storage.impl;
+package indi.joynic.naga.server.registry.storage.impl.redis;
 
 import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.Assert;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -19,6 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Registry storage impl of redis
+ *
+ * @author Terrance Fung<wkf.joynic@gmail.com>
+ * @since 1.0
+ */
+@Repository
 public class RedisRegistryStorageImpl implements RegistryStorage {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisRegistryStorageImpl.class);
@@ -28,13 +35,6 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
     @Value("${naming.server.redis.registry.data.hash.key}")
     private String registryDataHashKey;
-
-    /*@Value("${naming.server.redis.registry.namespace.index.set.key}")
-    private String registryNamespaceIndexSetKey;
-
-    @Value("${naming.server.redis.registry.namespace.servicename.index.set.key}")
-    private String registryNamespaceAndServiceNameIndexSetKey;*/
-
 
     @Resource(name = "redisRegistryTemplate")
     private RedisTemplate<String, String> redisRegistryTemplate;
@@ -51,16 +51,15 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
     public boolean save(LookupKey lookupKey, ServerNode serverNode) {
 
         if (null == lookupKey || null == serverNode
-                || StringUtils.isEmpty(lookupKey.getNamespace())
-                || StringUtils.isEmpty(lookupKey.getServiceName())
+                || StringUtils.isAnyBlank(lookupKey.getNamespace())
+                || StringUtils.isAnyBlank(lookupKey.getServiceName())
                 || null == lookupKey.getProtocolType()
                 || null == serverNode.getInetSocketAddress()) {
 
             throw new IllegalArgumentException("LookupKey or ServerNode arg is invalid! ");
         }
 
-        saveRegistryData(lookupKey, serverNode);
-        return false;
+        return saveRegistryData(lookupKey, serverNode);
     }
 
     private boolean saveRegistryData(LookupKey lookupKey, ServerNode serverNode) {
@@ -69,10 +68,10 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         String protocolName = lookupKey.getProtocolType().name();
 
         // data table: ns_serviceName_protocol => ip:port:weight
-        String key = StringUtils.join(new String[]{namespace, serviceName, protocolName}, KEY_FIELD_SEPARATOR);
+        String key = implodeKeys(namespace, serviceName, protocolName);
 
-        String value = StringUtils.join(new String[]{serverNode.getInetSocketAddress().getHostString(),
-                String.valueOf(serverNode.getInetSocketAddress().getPort())}, VALUE_FIELD_SEPARATOR);
+        String value = implodeValues(serverNode.getInetSocketAddress().getHostString(),
+                String.valueOf(serverNode.getInetSocketAddress().getPort()));
 
         boolean saveDataResult = redisRegistryTemplate.opsForHash().putIfAbsent(registryDataHashKey, key, value);
 
@@ -80,16 +79,31 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         Long saveNsIndexCount = redisRegistryTemplate.opsForSet().add(namespace, key);
 
         // ns & serviceName index table: ns_serviceName => ns_serviceName_protocol
-        String namespaceAndServiceNameIndexKey = StringUtils.join(new String[]{namespace, serviceName},
-                KEY_FIELD_SEPARATOR);
+        String namespaceAndServiceNameIndexKey = implodeKeys(namespace, serviceName);
 
         Long saveNsServiceNameIndexCount = redisRegistryTemplate.opsForSet().add(namespaceAndServiceNameIndexKey, key);
 
         return saveDataResult && null != saveNsIndexCount && null != saveNsServiceNameIndexCount;
     }
 
-    private Pair<LookupKey, ServerNode> locateWithLookupkeyImploded(String namespace, String lookupKeyImploded) {
-        if (StringUtils.isEmpty(lookupKeyImploded)) {
+    private String implodeKeys(String... keyStr) {
+        if (StringUtils.isAnyBlank(keyStr)) {
+            return null;
+        }
+
+        return RedisUtil.implode(KEY_FIELD_SEPARATOR, keyStr);
+    }
+
+    private String implodeValues(String... valueStr) {
+        if (StringUtils.isAnyBlank(valueStr)) {
+            return null;
+        }
+
+        return RedisUtil.implode(VALUE_FIELD_SEPARATOR, valueStr);
+    }
+
+    private Pair<LookupKey, ServerNode> locateWithLookupKeyImploded(String lookupKeyImploded, String namespace, String serviceName) {
+        if (StringUtils.isAnyBlank(lookupKeyImploded)) {
             return null;
         }
 
@@ -98,15 +112,20 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
         if (null == serverNodeImplodedResult) {
 
-            // bummer! not found map data, remove set index
-            Long removeSetMemberCount = redisRegistryTemplate.opsForSet()
-                    .remove(namespace, lookupKeyImploded);
+            if (null != namespace) {
 
-            if (removeSetMemberCount == 0) { // remove failed
+                // bummer! not found map data, remove set index
+                Long removeSetMemberCount = redisRegistryTemplate.opsForSet()
+                        .remove(null != serviceName
+                                ? implodeKeys(namespace, serviceName)
+                                : namespace, lookupKeyImploded);
 
-                logger.warn("remove dirty set index data from redis failed, key: {}, member: {}",
-                        namespace, lookupKeyImploded);
+                if (removeSetMemberCount == 0) { // remove failed
 
+                    logger.warn("remove dirty set index data from redis failed, key: {}, member: {}",
+                            namespace, lookupKeyImploded);
+
+                }
             }
 
             return null;
@@ -129,6 +148,8 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         return Pair.of(lookupKey, serverNode);
     }
 
+
+
     /**
      * client call for listing nodes by specifying namespace
      *
@@ -137,7 +158,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
      */
     @Override
     public List<Pair<LookupKey, ServerNode>> listByNamespace(String namespace) {
-        if (StringUtils.isEmpty(namespace)) {
+        if (StringUtils.isAnyBlank(namespace)) {
             return null;
         }
         Set<String> nsMembers = redisRegistryTemplate.opsForSet().members(namespace);
@@ -147,8 +168,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
         List<Pair<LookupKey, ServerNode>> registries = new ArrayList<>();
         for (String lookupKeyImploded : nsMembers) {
-
-            Pair<LookupKey, ServerNode> registry = locateWithLookupkeyImploded(namespace, lookupKeyImploded);
+            Pair<LookupKey, ServerNode> registry = locateWithLookupKeyImploded(lookupKeyImploded, namespace, null);
             if (null != registry) {
                 registries.add(registry);
             }
@@ -169,7 +189,9 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         String serviceName = lookupKeyArr[1];
         String protocolTypeName = lookupKeyArr[2];
 
-        if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(serviceName) || StringUtils.isEmpty(protocolTypeName)) {
+        if (StringUtils.isAnyBlank(namespace) || StringUtils.isAnyBlank(serviceName)
+                || StringUtils.isAnyBlank(protocolTypeName)) {
+
             return null;
         }
 
@@ -188,7 +210,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         String port = serverNodeArr[1];
         String weight = serverNodeArr[2];
 
-        if (StringUtils.isEmpty(ip) || StringUtils.isEmpty(port) || StringUtils.isEmpty(weight)) {
+        if (StringUtils.isAnyBlank(ip) || StringUtils.isAnyBlank(port) || StringUtils.isAnyBlank(weight)) {
             return null;
         }
 
@@ -197,16 +219,57 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
     @Override
     public List<Pair<LookupKey, ServerNode>> listByNamespaceAndServiceName(String namespace, String serviceName) {
-        return null;
+        if (StringUtils.isAnyBlank(namespace) || StringUtils.isAnyBlank(serviceName)) {
+            return null;
+        }
+
+        Set<String> keyMembers = redisRegistryTemplate.opsForSet()
+                .members(implodeKeys(namespace, serviceName));
+
+        if (CollectionUtils.isEmpty(keyMembers)) {
+            return null;
+        }
+
+        List<Pair<LookupKey, ServerNode>> registries = new ArrayList<>();
+        for (String lookupKeyImploded : keyMembers) {
+            Pair<LookupKey, ServerNode> registry = locateWithLookupKeyImploded(lookupKeyImploded, namespace, serviceName);
+            if (null != registry) {
+                registries.add(registry);
+            }
+        }
+
+        return registries;
     }
 
     @Override
     public List<Pair<LookupKey, ServerNode>> listByLookupKey(LookupKey lookupKey) {
-        return null;
+        String key = implodeKeys(lookupKey.getNamespace(), lookupKey.getServiceName(), lookupKey.getProtocolType().name());
+
+        Object value = redisRegistryTemplate.opsForHash().get(registryDataHashKey, key);
+        if (null == value) {
+            return null;
+        }
+
+        List<Pair<LookupKey, ServerNode>> registries = new ArrayList<>();
+
+        Pair<LookupKey, ServerNode> registry = locateWithLookupKeyImploded(key, null, null);
+        if (null != registry) {
+            registries.add(registry);
+        }
+
+        return registries;
     }
 
     @Override
     public void delete(LookupKey lookupKey) {
+        String namespace = lookupKey.getNamespace();
+        String serviceName = lookupKey.getServiceName();
+        String protocolTypeName = lookupKey.getProtocolType().name();
 
+        String key = implodeKeys(namespace, serviceName, protocolTypeName);
+
+        redisRegistryTemplate.opsForSet().remove(namespace);
+        redisRegistryTemplate.opsForSet().remove(implodeKeys(namespace, serviceName));
+        redisRegistryTemplate.opsForHash().delete(registryDataHashKey, key);
     }
 }

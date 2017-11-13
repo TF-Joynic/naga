@@ -24,7 +24,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] function [arg1 [arg2...]]')
   print('')
   print('Functions:')
-  print('  bool doRegister(String protocolType, String ns, String serviceName, String host, int port)')
+  print('  bool doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight)')
   print('')
   sys.exit(0)
 
@@ -82,10 +82,10 @@ client = NamingServerPortal.Client(protocol)
 transport.open()
 
 if cmd == 'doRegister':
-  if len(args) != 5:
-    print('doRegister requires 5 args')
+  if len(args) != 6:
+    print('doRegister requires 6 args')
     sys.exit(1)
-  pp.pprint(client.doRegister(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),))
+  pp.pprint(client.doRegister(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),eval(args[5]),))
 
 else:
   print('Unrecognized method %s' % cmd)

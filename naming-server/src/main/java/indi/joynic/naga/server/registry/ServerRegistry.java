@@ -6,9 +6,6 @@ import indi.joynic.naga.lib.ServerNode;
 
 import java.util.List;
 
-/**
- * Created by xiaolei on 2017/11/2.
- */
 public class ServerRegistry implements Registry {
     @Override
     public List<ServerNode> lookup(LookupKey lookupKey) {

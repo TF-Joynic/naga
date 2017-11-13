@@ -18,14 +18,15 @@ use Thrift\Exception\TApplicationException;
 
 interface NamingServerPortalIf {
   /**
-   * @param string $protocolType
    * @param string $ns
+   * @param string $protocolType
    * @param string $serviceName
    * @param string $host
    * @param int $port
+   * @param int $weight
    * @return bool
    */
-  public function doRegister($protocolType, $ns, $serviceName, $host, $port);
+  public function doRegister($ns, $protocolType, $serviceName, $host, $port, $weight);
 }
 
 class NamingServerPortalClient implements \Naming\Server\Potal\ServiceProvider\NamingServerPortalIf {
@@ -39,20 +40,21 @@ class NamingServerPortalClient implements \Naming\Server\Potal\ServiceProvider\N
     $this->output_ = $output ? $output : $input;
   }
 
-  public function doRegister($protocolType, $ns, $serviceName, $host, $port)
+  public function doRegister($ns, $protocolType, $serviceName, $host, $port, $weight)
   {
-    $this->send_doRegister($protocolType, $ns, $serviceName, $host, $port);
+    $this->send_doRegister($ns, $protocolType, $serviceName, $host, $port, $weight);
     return $this->recv_doRegister();
   }
 
-  public function send_doRegister($protocolType, $ns, $serviceName, $host, $port)
+  public function send_doRegister($ns, $protocolType, $serviceName, $host, $port, $weight)
   {
     $args = new \Naming\Server\Potal\ServiceProvider\NamingServerPortal_doRegister_args();
-    $args->protocolType = $protocolType;
     $args->ns = $ns;
+    $args->protocolType = $protocolType;
     $args->serviceName = $serviceName;
     $args->host = $host;
     $args->port = $port;
+    $args->weight = $weight;
     $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
     if ($bin_accel)
     {
@@ -104,11 +106,11 @@ class NamingServerPortal_doRegister_args {
   /**
    * @var string
    */
-  public $protocolType = null;
+  public $ns = null;
   /**
    * @var string
    */
-  public $ns = null;
+  public $protocolType = null;
   /**
    * @var string
    */
@@ -121,16 +123,20 @@ class NamingServerPortal_doRegister_args {
    * @var int
    */
   public $port = null;
+  /**
+   * @var int
+   */
+  public $weight = null;
 
   public function __construct($vals=null) {
     if (!isset(self::$_TSPEC)) {
       self::$_TSPEC = array(
         -1 => array(
-          'var' => 'protocolType',
+          'var' => 'ns',
           'type' => TType::STRING,
           ),
         -2 => array(
-          'var' => 'ns',
+          'var' => 'protocolType',
           'type' => TType::STRING,
           ),
         -3 => array(
@@ -145,14 +151,18 @@ class NamingServerPortal_doRegister_args {
           'var' => 'port',
           'type' => TType::I32,
           ),
+        -6 => array(
+          'var' => 'weight',
+          'type' => TType::I32,
+          ),
         );
     }
     if (is_array($vals)) {
-      if (isset($vals['protocolType'])) {
-        $this->protocolType = $vals['protocolType'];
-      }
       if (isset($vals['ns'])) {
         $this->ns = $vals['ns'];
+      }
+      if (isset($vals['protocolType'])) {
+        $this->protocolType = $vals['protocolType'];
       }
       if (isset($vals['serviceName'])) {
         $this->serviceName = $vals['serviceName'];
@@ -162,6 +172,9 @@ class NamingServerPortal_doRegister_args {
       }
       if (isset($vals['port'])) {
         $this->port = $vals['port'];
+      }
+      if (isset($vals['weight'])) {
+        $this->weight = $vals['weight'];
       }
     }
   }
@@ -187,14 +200,14 @@ class NamingServerPortal_doRegister_args {
       {
         case -1:
           if ($ftype == TType::STRING) {
-            $xfer += $input->readString($this->protocolType);
+            $xfer += $input->readString($this->ns);
           } else {
             $xfer += $input->skip($ftype);
           }
           break;
         case -2:
           if ($ftype == TType::STRING) {
-            $xfer += $input->readString($this->ns);
+            $xfer += $input->readString($this->protocolType);
           } else {
             $xfer += $input->skip($ftype);
           }
@@ -220,6 +233,13 @@ class NamingServerPortal_doRegister_args {
             $xfer += $input->skip($ftype);
           }
           break;
+        case -6:
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->weight);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
         default:
           $xfer += $input->skip($ftype);
           break;
@@ -233,6 +253,11 @@ class NamingServerPortal_doRegister_args {
   public function write($output) {
     $xfer = 0;
     $xfer += $output->writeStructBegin('NamingServerPortal_doRegister_args');
+    if ($this->weight !== null) {
+      $xfer += $output->writeFieldBegin('weight', TType::I32, -6);
+      $xfer += $output->writeI32($this->weight);
+      $xfer += $output->writeFieldEnd();
+    }
     if ($this->port !== null) {
       $xfer += $output->writeFieldBegin('port', TType::I32, -5);
       $xfer += $output->writeI32($this->port);
@@ -248,14 +273,14 @@ class NamingServerPortal_doRegister_args {
       $xfer += $output->writeString($this->serviceName);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->ns !== null) {
-      $xfer += $output->writeFieldBegin('ns', TType::STRING, -2);
-      $xfer += $output->writeString($this->ns);
+    if ($this->protocolType !== null) {
+      $xfer += $output->writeFieldBegin('protocolType', TType::STRING, -2);
+      $xfer += $output->writeString($this->protocolType);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->protocolType !== null) {
-      $xfer += $output->writeFieldBegin('protocolType', TType::STRING, -1);
-      $xfer += $output->writeString($this->protocolType);
+    if ($this->ns !== null) {
+      $xfer += $output->writeFieldBegin('ns', TType::STRING, -1);
+      $xfer += $output->writeString($this->ns);
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();

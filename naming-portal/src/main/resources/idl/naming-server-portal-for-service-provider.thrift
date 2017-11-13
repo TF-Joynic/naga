@@ -7,6 +7,5 @@ typedef string String
 
 
 service NamingServerPortal {
-    bool doRegister(String protocolType, String ns, String serviceName, String host, int port);
-
+    bool doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight);
 }

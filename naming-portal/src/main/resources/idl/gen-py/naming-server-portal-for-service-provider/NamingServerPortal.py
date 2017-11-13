@@ -19,14 +19,15 @@ except:
 
 
 class Iface:
-  def doRegister(self, protocolType, ns, serviceName, host, port):
+  def doRegister(self, ns, protocolType, serviceName, host, port, weight):
     """
     Parameters:
-     - protocolType
      - ns
+     - protocolType
      - serviceName
      - host
      - port
+     - weight
     """
     pass
 
@@ -38,26 +39,28 @@ class Client(Iface):
       self._oprot = oprot
     self._seqid = 0
 
-  def doRegister(self, protocolType, ns, serviceName, host, port):
+  def doRegister(self, ns, protocolType, serviceName, host, port, weight):
     """
     Parameters:
-     - protocolType
      - ns
+     - protocolType
      - serviceName
      - host
      - port
+     - weight
     """
-    self.send_doRegister(protocolType, ns, serviceName, host, port)
+    self.send_doRegister(ns, protocolType, serviceName, host, port, weight)
     return self.recv_doRegister()
 
-  def send_doRegister(self, protocolType, ns, serviceName, host, port):
+  def send_doRegister(self, ns, protocolType, serviceName, host, port, weight):
     self._oprot.writeMessageBegin('doRegister', TMessageType.CALL, self._seqid)
     args = doRegister_args()
-    args.protocolType = protocolType
     args.ns = ns
+    args.protocolType = protocolType
     args.serviceName = serviceName
     args.host = host
     args.port = port
+    args.weight = weight
     args.write(self._oprot)
     self._oprot.writeMessageEnd()
     self._oprot.trans.flush()
@@ -105,7 +108,7 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = doRegister_result()
     try:
-      result.success = self._handler.doRegister(args.protocolType, args.ns, args.serviceName, args.host, args.port)
+      result.success = self._handler.doRegister(args.ns, args.protocolType, args.serviceName, args.host, args.port, args.weight)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -124,20 +127,22 @@ class Processor(Iface, TProcessor):
 class doRegister_args:
   """
   Attributes:
-   - protocolType
    - ns
+   - protocolType
    - serviceName
    - host
    - port
+   - weight
   """
 
   thrift_spec = None
-  def __init__(self, protocolType=None, ns=None, serviceName=None, host=None, port=None,):
-    self.protocolType = protocolType
+  def __init__(self, ns=None, protocolType=None, serviceName=None, host=None, port=None, weight=None,):
     self.ns = ns
+    self.protocolType = protocolType
     self.serviceName = serviceName
     self.host = host
     self.port = port
+    self.weight = weight
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -150,12 +155,12 @@ class doRegister_args:
         break
       if fid == -1:
         if ftype == TType.STRING:
-          self.protocolType = iprot.readString()
+          self.ns = iprot.readString()
         else:
           iprot.skip(ftype)
       elif fid == -2:
         if ftype == TType.STRING:
-          self.ns = iprot.readString()
+          self.protocolType = iprot.readString()
         else:
           iprot.skip(ftype)
       elif fid == -3:
@@ -173,6 +178,11 @@ class doRegister_args:
           self.port = iprot.readI32()
         else:
           iprot.skip(ftype)
+      elif fid == -6:
+        if ftype == TType.I32:
+          self.weight = iprot.readI32()
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -183,6 +193,10 @@ class doRegister_args:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('doRegister_args')
+    if self.weight is not None:
+      oprot.writeFieldBegin('weight', TType.I32, -6)
+      oprot.writeI32(self.weight)
+      oprot.writeFieldEnd()
     if self.port is not None:
       oprot.writeFieldBegin('port', TType.I32, -5)
       oprot.writeI32(self.port)
@@ -195,13 +209,13 @@ class doRegister_args:
       oprot.writeFieldBegin('serviceName', TType.STRING, -3)
       oprot.writeString(self.serviceName)
       oprot.writeFieldEnd()
-    if self.ns is not None:
-      oprot.writeFieldBegin('ns', TType.STRING, -2)
-      oprot.writeString(self.ns)
-      oprot.writeFieldEnd()
     if self.protocolType is not None:
-      oprot.writeFieldBegin('protocolType', TType.STRING, -1)
+      oprot.writeFieldBegin('protocolType', TType.STRING, -2)
       oprot.writeString(self.protocolType)
+      oprot.writeFieldEnd()
+    if self.ns is not None:
+      oprot.writeFieldBegin('ns', TType.STRING, -1)
+      oprot.writeString(self.ns)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -212,11 +226,12 @@ class doRegister_args:
 
   def __hash__(self):
     value = 17
-    value = (value * 31) ^ hash(self.protocolType)
     value = (value * 31) ^ hash(self.ns)
+    value = (value * 31) ^ hash(self.protocolType)
     value = (value * 31) ^ hash(self.serviceName)
     value = (value * 31) ^ hash(self.host)
     value = (value * 31) ^ hash(self.port)
+    value = (value * 31) ^ hash(self.weight)
     return value
 
   def __repr__(self):
