@@ -17,10 +17,15 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-lib</artifactId>
-            <version>${naming.lib.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>indi.joynic.naga</groupId>
+            <artifactId>naming-portal</artifactId>
         </dependency>
 
         <dependency>
@@ -29,15 +34,10 @@
         </dependency>
 
         <dependency>
-            <groupId>indi.joynic.naga</groupId>
-            <artifactId>naming-portal</artifactId>
-            <version>${naming.portal.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

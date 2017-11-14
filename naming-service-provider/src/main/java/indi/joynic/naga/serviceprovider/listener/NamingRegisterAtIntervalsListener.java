@@ -1,6 +1,6 @@
 package indi.joynic.naga.serviceprovider.listener;
 
-import indi.joynic.naga.serviceprovider.NamingRegisterAtIntervalsTask;
+import indi.joynic.naga.serviceprovider.task.NamingRegisterAtIntervalsTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

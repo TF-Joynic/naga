@@ -13,21 +13,17 @@
     <artifactId>naming-server</artifactId>
 
     <properties>
-        <naming.lib.version>0.0.1-SNAPSHOT</naming.lib.version>
-        <naming.portal.version>0.0.1-SNAPSHOT</naming.portal.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-lib</artifactId>
-            <version>${naming.lib.version}</version>
         </dependency>
 
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-portal</artifactId>
-            <version>${naming.portal.version}</version>
         </dependency>
 
         <dependency>
