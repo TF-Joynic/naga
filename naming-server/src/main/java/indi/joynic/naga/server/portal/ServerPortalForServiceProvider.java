@@ -2,7 +2,6 @@ package indi.joynic.naga.server.portal;
 
 import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
-import indi.joynic.naga.lib.Registry;
 import indi.joynic.naga.lib.ServerNode;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
 import indi.joynic.naga.server.portal.serviceprovider.NamingServerPortal;
@@ -20,7 +19,7 @@ public class ServerPortalForServiceProvider extends AbstractNamingServicePortal 
     private RegistryStorage registryStorage;
 
     /**
-     * Service Provider register itself to the naming server
+     * register one node and its info on naming server
      *
      * @param protocolType
      * @param ns
