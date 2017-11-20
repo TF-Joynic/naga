@@ -12,7 +12,9 @@ public class NamingRegisterAtIntervalsTask implements Runnable {
         while (true) {
 
             System.out.println("registering to naming server..." + hosts);
-            
+
+            //
+
 
             try {
                 Thread.sleep(1000);
