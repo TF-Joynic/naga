@@ -5,9 +5,6 @@ import indi.joynic.naga.lib.ServerNode;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/**
- * Created by xiaolei on 2017/10/6.
- */
 public interface LoadBalancer {
 
     Future<Boolean> heathCheck();

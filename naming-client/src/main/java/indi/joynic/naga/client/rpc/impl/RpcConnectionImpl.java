@@ -6,9 +6,6 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by xiaolei on 2017/10/10.
- */
 public class RpcConnectionImpl implements RpcConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcConnectionImpl.class);

@@ -41,32 +41,7 @@ public class NamingClientImpl implements NamingClient {
      * @param connnectTimeout
      */
     public NamingClientImpl(int connnectTimeout) {
-
-        hostPortWeights = hostPortWeights.trim();
-        String[] hostPortWeightArr = hostPortWeights.split(",");
-
-        List<InetSocketAddress> inetSocketAddressList
-                = new ArrayList<>(hostPortWeightArr.length);
-
-        int[] weights = new int[hostPortWeightArr.length];
-
-        for (int i = 0; i < hostPortWeightArr.length; i ++) {
-            String hostPortWeight = hostPortWeightArr[i];
-            String[] hostPortWeightSegment = hostPortWeight.split(":");
-
-            if (hostPortWeightSegment.length < 2) {
-                throw new IllegalArgumentException("host port weight should be separated by :");
-            }
-
-            String host = hostPortWeightSegment[0];
-            int port = Integer.valueOf(hostPortWeightSegment[1]);
-
-            if (hostPortWeightSegment.length > 2) {
-                weights[i] = Integer.valueOf(hostPortWeightSegment[2]);
-            }
-
-            inetSocketAddressList.add(new InetSocketAddress(host, port));
-        }
+        this.connectTimeout = connnectTimeout;
     }
 
     /**
@@ -76,12 +51,14 @@ public class NamingClientImpl implements NamingClient {
         return null;
     }
 
-    public boolean register() {
-
+    @Override
+    public boolean register(String serviceName, String hostIp, int port) {
+        return false;
     }
 
-    public boolean unregister() {
-
+    @Override
+    public boolean unregister(String serviceName, String hostIp, int port) {
+        return false;
     }
 
     public ServerNode getNextServerNode() {
@@ -91,4 +68,5 @@ public class NamingClientImpl implements NamingClient {
 
         return loadBalancer.getNextServerNode();
     }
+
 }

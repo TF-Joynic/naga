@@ -11,9 +11,7 @@ public class NamingRegisterAtIntervalsTask implements Runnable {
     public void run() {
         while (true) {
 
-            System.out.println("registering to naming server..." + hosts);
-
-            //
+            // registering to naming server...
 
 
             try {
