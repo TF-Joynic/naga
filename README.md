@@ -52,7 +52,7 @@
 		
    ```
 
-## Then Christmas is comming and one of your service machine(101) is not working well for lack of maintence. :( 
+## Then Christmas is coming and one of your service machine(101) is not working well for lack of maintenance. :( 
   *  ~~192.168.1.101:1234,~~
 		
   * Unfortunately the config file is modified manually and redeploy for another time.
@@ -70,15 +70,15 @@
 
 	```
                                                     
-										192.168.1.100:1234,
-										192.168.1.101:1234,
-										192.168.1.102:1234,
-		user_center_hosts	---------   192.168.1.103:1234,
-										192.168.1.104:1234,
-										192.168.1.105:1234,
-										192.168.1.106:1234,
-										192.168.1.107:1234,
-										192.168.1.108:1234
+                                                    192.168.1.100:1234,
+                                                    192.168.1.101:1234,
+                                                    192.168.1.102:1234,
+		user_center_hosts	---------     192.168.1.103:1234,
+                                                    192.168.1.104:1234,
+                                                    192.168.1.105:1234,
+                                                    192.168.1.106:1234,
+                                                    192.168.1.107:1234,
+                                                    192.168.1.108:1234
 										...
 
                       
