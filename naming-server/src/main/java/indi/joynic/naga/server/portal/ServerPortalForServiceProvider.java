@@ -4,7 +4,7 @@ import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
 import indi.joynic.naga.lib.ServerNode;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
-import indi.joynic.naga.server.portal.serviceprovider.NamingServerPortal;
+import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
 import indi.joynic.naga.server.registry.storage.RegistryStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TException;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class ServerPortalForServiceProvider extends AbstractNamingServicePortal implements NamingServerPortal.Iface {
+public class ServerPortalForServiceProvider extends AbstractNamingServicePortal implements ThriftNamingServerPortal.Iface {
 
     @Resource
     private RegistryStorage registryStorage;

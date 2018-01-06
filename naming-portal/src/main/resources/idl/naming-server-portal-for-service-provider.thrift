@@ -6,6 +6,6 @@ typedef i64 long
 typedef string String
 
 
-service NamingServerPortal {
+service ThriftNamingServerPortal {
     bool doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight);
 }

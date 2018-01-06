@@ -140,7 +140,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         ServerNode serverNode = concreteServerNode(serverNodeArr);
         if (null == lookupKey || null == serverNode) {
 
-            logger.error("Could not concrete lookupKey or serverNode, lookupKeyImploded: {}, serverNodeImploded",
+            logger.error("Could not concrete lookupKey or serverNode, lookupKeyImploded: {}, serverNodeImploded: {}",
                     lookupKeyImploded, serverNodeImploded);
 
         }

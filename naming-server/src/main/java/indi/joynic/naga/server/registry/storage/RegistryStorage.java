@@ -22,7 +22,7 @@ public interface RegistryStorage {
     boolean save(LookupKey lookupKey, ServerNode serverNode);
 
     /**
-     * list the node list by specifying the namespace
+     * client call for listing nodes by specifying namespace
      *
      * @param namespace
      * @return

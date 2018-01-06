@@ -28,7 +28,7 @@ public class RedisConfig {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setHostName(host);
         factory.setPort(port);
-        factory.setTimeout(timeout); //设置连接超时时间
+        factory.setTimeout(timeout);
         return factory;
     }
 

@@ -1,10 +1,14 @@
 package indi.joynic.naga.serviceprovider.task;
 
+import indi.joynic.naga.server.portal.serviceprovider.register.RegisterOnServerPortalAccessor;
+
 public class NamingRegisterAtIntervalsTask implements Runnable {
     private String hosts;
+    private Long intervalTimeMillis;
 
-    public NamingRegisterAtIntervalsTask(String hosts) {
+    public NamingRegisterAtIntervalsTask(String hosts, Long intervalTimeMillis) {
         this.hosts = hosts;
+        this.intervalTimeMillis = intervalTimeMillis;
     }
 
     @Override
@@ -12,10 +16,10 @@ public class NamingRegisterAtIntervalsTask implements Runnable {
         while (true) {
 
             // registering to naming server...
-
+            RegisterOnServerPortalAccessor accessor = 
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(intervalTimeMillis);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

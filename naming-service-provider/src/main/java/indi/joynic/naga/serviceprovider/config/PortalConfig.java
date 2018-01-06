@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 public class PortalConfig {
 
     /*@Value("${naming.server.hosts}")
-    private String namingServerHosts;*/
+    public String namingServerHosts;
 
+    @Value("${register.interval}")
+    public Long registerInterval;*/
 }

@@ -65,6 +65,7 @@
  
 
 <br />
+
 # Now let's try *Naga Naming Service* 
   * service name and service hosts mapping:
 
@@ -88,3 +89,6 @@
   * Automatically detect naughty service machine and evict it from service list until it behaves.
   * Admin pages that can show status of all service machine and make it easy to execute daily maintenance.
   * and more...
+  
+# Architecture
+    
