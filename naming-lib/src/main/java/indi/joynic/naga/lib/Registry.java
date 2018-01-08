@@ -1,5 +1,7 @@
 package indi.joynic.naga.lib;
 
+import indi.joynic.naga.lib.lb.node.ServiceNode;
+
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ public interface Registry {
      *
      * @return
      */
-    List<ServerNode> lookup(LookupKey lookupKey);
+    List<ServiceNode> lookup(LookupKey lookupKey);
 
     /**
      * remove a invalid server node
@@ -24,5 +26,5 @@ public interface Registry {
      *
      * @return
      */
-    boolean evict(LookupKey lookupKey, ServerNode serverNode);
+    boolean evict(LookupKey lookupKey, ServiceNode serverNode);
 }

@@ -1,6 +1,7 @@
 package indi.joynic.naga.server.health;
 
-import indi.joynic.naga.lib.ServerNode;
+
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 
 /**
  *
@@ -8,6 +9,6 @@ import indi.joynic.naga.lib.ServerNode;
  */
 public interface HealthCheckup {
 
-    void heartbeat(ServerNode serverNode);
+    void heartbeat(ServiceNode serverNode);
 
 }

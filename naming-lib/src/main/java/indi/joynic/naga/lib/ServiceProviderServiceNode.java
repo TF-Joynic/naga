@@ -1,5 +1,7 @@
 package indi.joynic.naga.lib;
 
+import indi.joynic.naga.lib.lb.node.ServiceNode;
+
 import java.net.InetSocketAddress;
 import java.util.Calendar;
 
@@ -7,16 +9,17 @@ import java.util.Calendar;
  * The representation class of node that providing RPC service.
  *
  */
-public class ServerNode {
+public class ServiceProviderServiceNode implements ServiceNode {
     private InetSocketAddress inetSocketAddress;
 
     // weight for Client LB
     private volatile int weight;
 
-    // last online time
-    private Calendar lastOnlineTime;
+    private volatile Calendar onlineSince;
 
-    public ServerNode(InetSocketAddress address, int weight) {
+    private volatile boolean isOnline;
+
+    public ServiceProviderServiceNode(InetSocketAddress address, int weight) {
         if (null == address) {
             throw new NullPointerException("invalid socket address");
         }
@@ -25,9 +28,9 @@ public class ServerNode {
         this.inetSocketAddress = address;
     }
 
-    public static ServerNode valueOf(String ip, int port, int weight) {
+    public static ServiceProviderServiceNode valueOf(String ip, int port, int weight) {
         InetSocketAddress inetSocketAddress = new InetSocketAddress(ip, port);
-        return new ServerNode(inetSocketAddress, weight);
+        return new ServiceProviderServiceNode(inetSocketAddress, weight);
     }
 
     public InetSocketAddress getInetSocketAddress() {
@@ -42,12 +45,22 @@ public class ServerNode {
         this.weight = weight;
     }
 
-    public Calendar getLastOnlineTime() {
-        return lastOnlineTime;
+    @Override
+    public boolean isOnline() {
+        return isOnline;
     }
 
-    public void setLastOnlineTime(Calendar calendar) {
-        this.lastOnlineTime = calendar;
+    @Override
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
+    }
+
+    public Calendar getOnlineSince() {
+        return onlineSince;
+    }
+
+    public void setOnlineSince(Calendar calendar) {
+        this.onlineSince = calendar;
     }
 
     @Override
@@ -55,7 +68,7 @@ public class ServerNode {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ServerNode that = (ServerNode) o;
+        ServiceProviderServiceNode that = (ServiceProviderServiceNode) o;
 
         return inetSocketAddress.equals(that.inetSocketAddress);
     }
@@ -67,10 +80,10 @@ public class ServerNode {
 
     @Override
     public String toString() {
-        return "ServerNode{" +
+        return "ServiceNode{" +
                 "inetSocketAddress=" + inetSocketAddress +
                 ", weight=" + weight +
-                ", lastOnlineTime=" + lastOnlineTime +
+                ", onlineSince=" + onlineSince +
                 '}';
     }
 }

@@ -1,6 +1,6 @@
 package indi.joynic.naga.server.health.impl;
 
-import indi.joynic.naga.lib.ServerNode;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 import indi.joynic.naga.server.health.HealthCheckup;
 
 /**
@@ -11,7 +11,7 @@ import indi.joynic.naga.server.health.HealthCheckup;
  */
 public class HealthCheckupImpl implements HealthCheckup {
     @Override
-    public void heartbeat(ServerNode serverNode) {
+    public void heartbeat(ServiceNode serverNode) {
         // TODO socket and ping result check
 
     }

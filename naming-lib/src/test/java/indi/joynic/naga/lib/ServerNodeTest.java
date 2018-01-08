@@ -5,14 +5,12 @@ import org.junit.Test;
 
 import java.net.InetSocketAddress;
 
-import static org.junit.Assert.*;
-
 public class ServerNodeTest {
     @Test
     public void getInetSocketAddress() throws Exception {
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress("127.0.0.1", 9078);
-        ServerNode serverNode = new ServerNode(inetSocketAddress, 45);
+        ServiceProviderServiceNode serverNode = new ServiceProviderServiceNode(inetSocketAddress, 45);
 
         System.out.println(serverNode.getInetSocketAddress().getHostString());
         System.out.println(serverNode.getInetSocketAddress().getPort());

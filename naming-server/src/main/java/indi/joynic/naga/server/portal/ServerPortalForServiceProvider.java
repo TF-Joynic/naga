@@ -2,7 +2,7 @@ package indi.joynic.naga.server.portal;
 
 import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
-import indi.joynic.naga.lib.ServerNode;
+import indi.joynic.naga.lib.ServiceProviderServiceNode;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
 import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
 import indi.joynic.naga.server.registry.storage.RegistryStorage;
@@ -45,7 +45,7 @@ public class ServerPortalForServiceProvider extends AbstractNamingServicePortal 
         }
 
         LookupKey lookupKey = LookupKey.valueOf(ns, serviceName, ProtocolType.valueOf(protocolType));
-        ServerNode serverNode = ServerNode.valueOf(host, port, weight);
+        ServiceProviderServiceNode serverNode = ServiceProviderServiceNode.valueOf(host, port, weight);
 
         // register to storage
         return registryStorage.save(lookupKey, serverNode);

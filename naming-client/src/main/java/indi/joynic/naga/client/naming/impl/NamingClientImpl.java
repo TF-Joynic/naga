@@ -1,12 +1,11 @@
 package indi.joynic.naga.client.naming.impl;
 
-import indi.joynic.naga.lib.ServerNode;
-import indi.joynic.naga.client.lb.LoadBalancer;
-import indi.joynic.naga.client.lb.impl.LoadBalancerImpl;
+import indi.joynic.naga.lib.lb.LoadBalancer;
+import indi.joynic.naga.lib.lb.impl.LoadBalancerImpl;
 import indi.joynic.naga.client.naming.NamingClient;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -61,12 +60,12 @@ public class NamingClientImpl implements NamingClient {
         return false;
     }
 
-    public ServerNode getNextServerNode() {
+    public ServiceNode getNextServerNode() {
         if (null == loadBalancer) {
             loadBalancer = new LoadBalancerImpl();
         }
 
-        return loadBalancer.getNextServerNode();
+        return loadBalancer.nextServerNode();
     }
 
 }

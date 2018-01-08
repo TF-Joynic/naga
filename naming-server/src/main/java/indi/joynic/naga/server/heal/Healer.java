@@ -1,6 +1,6 @@
 package indi.joynic.naga.server.heal;
 
-import indi.joynic.naga.lib.ServerNode;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 
 /**
  * Role which attempt to heal server node and put it back to the heath server node list.
@@ -17,7 +17,7 @@ public interface Healer {
      * @param serverNode
      * @return
      */
-    boolean heal(ServerNode serverNode);
+    boolean heal(ServiceNode serverNode);
 
 
 }

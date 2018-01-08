@@ -1,8 +1,7 @@
 package indi.joynic.naga.server.registry.storage;
 
 import indi.joynic.naga.lib.LookupKey;
-import indi.joynic.naga.lib.ProtocolType;
-import indi.joynic.naga.lib.ServerNode;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public interface RegistryStorage {
      * @param serverNode
      * @return
      */
-    boolean save(LookupKey lookupKey, ServerNode serverNode);
+    boolean save(LookupKey lookupKey, ServiceNode serverNode);
 
     /**
      * client call for listing nodes by specifying namespace
@@ -27,7 +26,7 @@ public interface RegistryStorage {
      * @param namespace
      * @return
      */
-    List<Pair<LookupKey, ServerNode>> listByNamespace(String namespace);
+    List<Pair<LookupKey, ServiceNode>> listByNamespace(String namespace);
 
     /**
      * list the node list by specifying the namespace and serviceName
@@ -35,7 +34,7 @@ public interface RegistryStorage {
      * @param namespace
      * @return
      */
-    List<Pair<LookupKey, ServerNode>> listByNamespaceAndServiceName(String namespace, String serviceName);
+    List<Pair<LookupKey, ServiceNode>> listByNamespaceAndServiceName(String namespace, String serviceName);
 
     /**
      * naming-client invocation method
@@ -43,7 +42,7 @@ public interface RegistryStorage {
      * @param lookupKey
      * @return
      */
-    List<Pair<LookupKey, ServerNode>> listByLookupKey(LookupKey lookupKey);
+    List<Pair<LookupKey, ServiceNode>> listByLookupKey(LookupKey lookupKey);
 
     void delete(LookupKey lookupKey);
 

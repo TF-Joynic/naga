@@ -16,7 +16,7 @@ public class NamingRegisterAtIntervalsTask implements Runnable {
         while (true) {
 
             // registering to naming server...
-            RegisterOnServerPortalAccessor accessor = 
+//            RegisterOnServerPortalAccessor accessor = ...
 
             try {
                 Thread.sleep(intervalTimeMillis);
