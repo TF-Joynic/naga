@@ -16,14 +16,18 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Co
     @Value("${naming.server.hosts}")
     private String hosts;
 
-    @Value("${register.interval}")
+    @Value("${naming.register.interval}")
     private Long registerInterval;
 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask = new NamingRegisterAtIntervalsTask(hosts, registerInterval);
+
+        NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask
+                = new NamingRegisterAtIntervalsTask(hosts, registerInterval);
+
         Thread namingRegisterAtIntervalsThread = new Thread(namingRegisterAtIntervalsTask);
+        namingRegisterAtIntervalsThread.setName("namingRegisterAtIntervals");
         namingRegisterAtIntervalsThread.setDaemon(true);
         namingRegisterAtIntervalsThread.start();
 

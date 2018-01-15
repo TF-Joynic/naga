@@ -38,7 +38,7 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
 
         try {
 
-            accessResult = accessWith.doRegister(accessArgs.getNs(),
+            accessResult = accessWith.doRegister(accessArgs.getNamespace(),
                     accessArgs.getProtocolType(), accessArgs.getServiceName(), accessArgs.getHost(),
                     accessArgs.getPort(), accessArgs.getWeight());
 
@@ -53,19 +53,19 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
      * AccessArgs that using by accessWith
      */
     public static class AccessArgs {
-        private String ns;
+        private String namespace;
         private String protocolType;
         private String serviceName;
         private String host;
         private int port;
         private int weight;
 
-        public String getNs() {
-            return ns;
+        public String getNamespace() {
+            return namespace;
         }
 
-        public void setNs(String ns) {
-            this.ns = ns;
+        public void setNamespace(String namespace) {
+            this.namespace = namespace;
         }
 
         public String getProtocolType() {

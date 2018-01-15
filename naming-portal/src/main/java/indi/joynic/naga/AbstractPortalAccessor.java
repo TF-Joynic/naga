@@ -5,11 +5,11 @@ package indi.joynic.naga;
  *
  * @param <R> Result of the access return
  */
-public abstract class AbstractPortalAccessorImpl<R> implements PortalAccessor {
+public abstract class AbstractPortalAccessor<R> implements PortalAccessor {
 
     private AccessSubject<R> subject;
 
-    protected AbstractPortalAccessorImpl(AccessSubject<R> subject) {
+    protected AbstractPortalAccessor(AccessSubject<R> subject) {
         this.subject = subject;
     }
 

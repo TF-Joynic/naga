@@ -42,7 +42,9 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
     /**
      * If the data exists, probably the client is doing register operation repeatedly.
-     * Thus call hash.putIfAbsent() simply.
+     * Call hash.putIfAbsent() is improperly 'cuz service provider might have changed configuration.
+     *
+     * Saving weight as well?
      *
      * @param lookupKey
      * @param serverNode
@@ -74,7 +76,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         String value = implodeValues(serverNode.getInetSocketAddress().getHostString(),
                 String.valueOf(serverNode.getInetSocketAddress().getPort()));
 
-        boolean saveDataResult = redisRegistryTemplate.opsForHash().putIfAbsent(registryDataHashKey, key, value);
+        redisRegistryTemplate.opsForHash().put(registryDataHashKey, key, value);
 
         // ns index table: ns => ns_serviceName_protocol
         Long saveNsIndexCount = redisRegistryTemplate.opsForSet().add(namespace, key);
@@ -84,7 +86,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
 
         Long saveNsServiceNameIndexCount = redisRegistryTemplate.opsForSet().add(namespaceAndServiceNameIndexKey, key);
 
-        return saveDataResult && null != saveNsIndexCount && null != saveNsServiceNameIndexCount;
+        return null != saveNsIndexCount && null != saveNsServiceNameIndexCount;
     }
 
     private String implodeKeys(String... keyStr) {

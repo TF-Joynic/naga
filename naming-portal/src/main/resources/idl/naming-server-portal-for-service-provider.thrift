@@ -7,5 +7,5 @@ typedef string String
 
 
 service ThriftNamingServerPortal {
-    bool doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight);
+    bool doRegister(String namespace, String protocolType, String serviceName, String host, int port, int weight);
 }

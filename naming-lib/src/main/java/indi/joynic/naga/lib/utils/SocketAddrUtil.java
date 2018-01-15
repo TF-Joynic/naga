@@ -1,5 +1,8 @@
 package indi.joynic.naga.lib.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class SocketAddrUtil {
 
     /**
@@ -14,6 +17,22 @@ public class SocketAddrUtil {
             throw new IllegalArgumentException("port out of range:" + port);
 
         return port;
+    }
+
+    /**
+     * get intranet ip(string) of this very machine.
+     *
+     * @return
+     */
+    public static String getIntranetIp() {
+        String ip = null;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return ip;
     }
 
 }

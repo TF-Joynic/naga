@@ -19,10 +19,10 @@ except:
 
 
 class Iface:
-  def doRegister(self, ns, protocolType, serviceName, host, port, weight):
+  def doRegister(self, namespace, protocolType, serviceName, host, port, weight):
     """
     Parameters:
-     - ns
+     - namespace
      - protocolType
      - serviceName
      - host
@@ -39,23 +39,23 @@ class Client(Iface):
       self._oprot = oprot
     self._seqid = 0
 
-  def doRegister(self, ns, protocolType, serviceName, host, port, weight):
+  def doRegister(self, namespace, protocolType, serviceName, host, port, weight):
     """
     Parameters:
-     - ns
+     - namespace
      - protocolType
      - serviceName
      - host
      - port
      - weight
     """
-    self.send_doRegister(ns, protocolType, serviceName, host, port, weight)
+    self.send_doRegister(namespace, protocolType, serviceName, host, port, weight)
     return self.recv_doRegister()
 
-  def send_doRegister(self, ns, protocolType, serviceName, host, port, weight):
+  def send_doRegister(self, namespace, protocolType, serviceName, host, port, weight):
     self._oprot.writeMessageBegin('doRegister', TMessageType.CALL, self._seqid)
     args = doRegister_args()
-    args.ns = ns
+    args.namespace = namespace
     args.protocolType = protocolType
     args.serviceName = serviceName
     args.host = host
@@ -108,7 +108,7 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = doRegister_result()
     try:
-      result.success = self._handler.doRegister(args.ns, args.protocolType, args.serviceName, args.host, args.port, args.weight)
+      result.success = self._handler.doRegister(args.namespace, args.protocolType, args.serviceName, args.host, args.port, args.weight)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -127,7 +127,7 @@ class Processor(Iface, TProcessor):
 class doRegister_args:
   """
   Attributes:
-   - ns
+   - namespace
    - protocolType
    - serviceName
    - host
@@ -136,8 +136,8 @@ class doRegister_args:
   """
 
   thrift_spec = None
-  def __init__(self, ns=None, protocolType=None, serviceName=None, host=None, port=None, weight=None,):
-    self.ns = ns
+  def __init__(self, namespace=None, protocolType=None, serviceName=None, host=None, port=None, weight=None,):
+    self.namespace = namespace
     self.protocolType = protocolType
     self.serviceName = serviceName
     self.host = host
@@ -155,7 +155,7 @@ class doRegister_args:
         break
       if fid == -1:
         if ftype == TType.STRING:
-          self.ns = iprot.readString()
+          self.namespace = iprot.readString()
         else:
           iprot.skip(ftype)
       elif fid == -2:
@@ -213,9 +213,9 @@ class doRegister_args:
       oprot.writeFieldBegin('protocolType', TType.STRING, -2)
       oprot.writeString(self.protocolType)
       oprot.writeFieldEnd()
-    if self.ns is not None:
-      oprot.writeFieldBegin('ns', TType.STRING, -1)
-      oprot.writeString(self.ns)
+    if self.namespace is not None:
+      oprot.writeFieldBegin('namespace', TType.STRING, -1)
+      oprot.writeString(self.namespace)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
@@ -226,7 +226,7 @@ class doRegister_args:
 
   def __hash__(self):
     value = 17
-    value = (value * 31) ^ hash(self.ns)
+    value = (value * 31) ^ hash(self.namespace)
     value = (value * 31) ^ hash(self.protocolType)
     value = (value * 31) ^ hash(self.serviceName)
     value = (value * 31) ^ hash(self.host)
