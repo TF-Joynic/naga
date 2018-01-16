@@ -2,11 +2,11 @@
  * @author Terrance Fung<wkf.joynic@gmail.com>
  */
 
-package indi.joynic.naga.client.connpool.impl;
+package indi.joynic.naga.rpc.connpool.impl;
 
-import indi.joynic.naga.client.connpool.RpcConnectionProvider;
-import indi.joynic.naga.client.connpool.enums.ConnectionStatus;
-import indi.joynic.naga.client.rpc.RpcConnection;
+import indi.joynic.naga.rpc.connection.RpcConnection;
+import indi.joynic.naga.rpc.connpool.RpcConnectionProvider;
+import indi.joynic.naga.rpc.connpool.enums.ConnectionStatus;
 
 import java.util.concurrent.ConcurrentHashMap;
 

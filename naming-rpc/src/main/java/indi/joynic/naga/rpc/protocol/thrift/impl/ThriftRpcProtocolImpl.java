@@ -1,7 +1,11 @@
-package indi.joynic.naga.client.rpc.impl;
+/*
+ * @author Terrance Fung<wkf.joynic@gmail.com>
+ */
 
-import indi.joynic.naga.client.rpc.RpcConnection;
-import indi.joynic.naga.client.rpc.RpcProtocol;
+package indi.joynic.naga.rpc.protocol.thrift.impl;
+
+import indi.joynic.naga.rpc.connection.thrift.ThriftRpcConnection;
+import indi.joynic.naga.rpc.protocol.thrift.ThriftRpcProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
@@ -9,15 +13,14 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 
-
-public class RpcProtocolImpl implements RpcProtocol {
-    private static final Logger logger = LoggerFactory.getLogger(RpcProtocolImpl.class);
+public class ThriftRpcProtocolImpl implements ThriftRpcProtocol {
+    private static final Logger logger = LoggerFactory.getLogger(ThriftRpcProtocolImpl.class);
 
     private TProtocol inputProtocol;
     private TProtocol outputProtocol;
 
-    public RpcProtocolImpl(Class<? extends TProtocol> inputProtocolClazz,
-                           Class<? extends TProtocol> outputProtocolClazz, RpcConnection rpcConnection) {
+    public ThriftRpcProtocolImpl(Class<? extends TProtocol> inputProtocolClazz,
+                                 Class<? extends TProtocol> outputProtocolClazz, ThriftRpcConnection rpcConnection) {
 
         try {
             this.inputProtocol = inputProtocolClazz.getDeclaredConstructor(TTransport.class).newInstance(rpcConnection.getConnection());
@@ -25,16 +28,16 @@ public class RpcProtocolImpl implements RpcProtocol {
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
     }
 
-    public RpcProtocolImpl(Class<? extends TProtocol> rpcProtocolClazz, RpcConnection rpcConnection) {
+    public ThriftRpcProtocolImpl(Class<? extends TProtocol> rpcProtocolClazz, ThriftRpcConnection rpcConnection) {
         try {
             this.inputProtocol = rpcProtocolClazz.getDeclaredConstructor(TTransport.class).newInstance(rpcConnection.getConnection());
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
         }
 
-        logger.info("using same input & output protocol");
         this.outputProtocol = this.inputProtocol;
     }
 

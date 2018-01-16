@@ -20,7 +20,8 @@
         <module>naming-agent</module>
 		<module>naming-service-provider</module>
 		<module>naming-portal</module>
-	</modules>
+        <module>naming-rpc</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<name>naga</name>

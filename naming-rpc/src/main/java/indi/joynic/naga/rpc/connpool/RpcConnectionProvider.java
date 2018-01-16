@@ -2,10 +2,10 @@
  * @author Terrance Fung<wkf.joynic@gmail.com>
  */
 
-package indi.joynic.naga.client.connpool;
+package indi.joynic.naga.rpc.connpool;
 
-import indi.joynic.naga.client.rpc.RpcConnection;
 
+import indi.joynic.naga.rpc.connection.RpcConnection;
 
 public interface RpcConnectionProvider {
 

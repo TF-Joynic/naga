@@ -1,4 +1,4 @@
-package indi.joynic.naga.client.connpool.enums;
+package indi.joynic.naga.rpc.connpool.enums;
 
 /**
  * Connection Status in the connection pool
