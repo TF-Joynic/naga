@@ -1,4 +1,4 @@
-package indi.joynic.naga;
+package indi.joynic.naga.portal;
 
 /**
  * The very abstract class that call access method actually.

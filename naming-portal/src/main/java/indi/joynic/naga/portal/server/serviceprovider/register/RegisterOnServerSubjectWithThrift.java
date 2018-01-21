@@ -1,7 +1,7 @@
-package indi.joynic.naga.server.portal.serviceprovider.register;
+package indi.joynic.naga.portal.server.serviceprovider.register;
 
-import indi.joynic.naga.AccessSubject;
-import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.portal.AccessSubject;
+import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Subject: Register serverNode on naming server Subject with Thrift.
  *
- *  You may using different <code>accessWith</code> such as HTTP(CURL) to access portal.
+ *  You may using different <code>accessClient</code> such as HTTP(CURL) to access portal.
  *
  *  For example:
  *    public class RegisterOnNamingServerSubjectWithHttpCurl implements AccessSubject<Boolean> {
@@ -25,11 +25,12 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
 
 
     private AccessArgs accessArgs;
-    private ThriftNamingServerPortal.Iface accessWith;
+    private ThriftNamingServerPortal.Iface accessClient;
 
 
-    public RegisterOnServerSubjectWithThrift(AccessArgs accessArgs, ThriftNamingServerPortal.Iface accessWith) {
+    public RegisterOnServerSubjectWithThrift(AccessArgs accessArgs, ThriftNamingServerPortal.Iface accessClient) {
         this.accessArgs = accessArgs;
+        this.accessClient = accessClient;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
 
         try {
 
-            accessResult = accessWith.doRegister(accessArgs.getNamespace(),
+            accessResult = accessClient.doRegister(accessArgs.getNamespace(),
                     accessArgs.getProtocolType(), accessArgs.getServiceName(), accessArgs.getHost(),
                     accessArgs.getPort(), accessArgs.getWeight());
 
@@ -50,7 +51,7 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
     }
 
     /**
-     * AccessArgs that using by accessWith
+     * AccessArgs that using by accessClient
      */
     public static class AccessArgs {
         private String namespace;

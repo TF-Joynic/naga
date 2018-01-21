@@ -16,9 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RpcConnectionProviderImpl implements RpcConnectionProvider {
 
     private final ConcurrentHashMap<RpcConnection, ConnectionStatus> connectionPool = new ConcurrentHashMap<>();
+    private final int maxConnectionCount;
 
-    public RpcConnectionProviderImpl() {
-
+    public RpcConnectionProviderImpl(int maxConnectionCount) {
+        this.maxConnectionCount = maxConnectionCount;
     }
 
     @Override

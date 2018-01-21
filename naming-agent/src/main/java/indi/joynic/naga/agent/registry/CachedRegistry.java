@@ -1,15 +1,15 @@
-package indi.joynic.naga.client.registry;
+package indi.joynic.naga.agent.registry;
 
 import indi.joynic.naga.lib.Registry;
 
 /**
- * client-side local registry cache.
+ * client-side local registry.
  * when the naming server is down or unreachable, client uses local cache.
  *
  * @author Terrance Fung
  * @since 1.0
  */
-public interface RegistryCache extends Registry {
+public interface CachedRegistry extends Registry {
 
     /**
      * clear all the local registry cache once for all

@@ -36,6 +36,7 @@
 		<spring-boot-starter-redis-version>1.3.2.RELEASE</spring-boot-starter-redis-version>
 		<naming.lib.version>0.0.1-SNAPSHOT</naming.lib.version>
 		<naming.portal.version>0.0.1-SNAPSHOT</naming.portal.version>
+		<naming.rpc.version>0.0.1-SNAPSHOT</naming.rpc.version>
 	</properties>
 
 	<dependencyManagement>
@@ -45,6 +46,18 @@
 				<groupId>indi.joynic.naga</groupId>
 				<artifactId>naming-lib</artifactId>
 				<version>${naming.lib.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>indi.joynic.naga</groupId>
+				<artifactId>naming-portal</artifactId>
+				<version>${naming.portal.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>indi.joynic.naga</groupId>
+				<artifactId>naming-rpc</artifactId>
+				<version>${naming.rpc.version}</version>
 			</dependency>
 
 			<dependency>
@@ -71,11 +84,7 @@
 				<version>3.6</version>
 			</dependency>
 
-			<dependency>
-				<groupId>indi.joynic.naga</groupId>
-				<artifactId>naming-portal</artifactId>
-				<version>${naming.portal.version}</version>
-			</dependency>
+
 
 		</dependencies>
 	</dependencyManagement>

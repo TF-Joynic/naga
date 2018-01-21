@@ -12,8 +12,6 @@
     <artifactId>naming-service-provider</artifactId>
 
     <properties>
-        <naming.lib.version>0.0.1-SNAPSHOT</naming.lib.version>
-        <naming.portal.version>0.0.1-SNAPSHOT</naming.portal.version>
     </properties>
 
     <dependencies>
@@ -26,6 +24,11 @@
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-portal</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>indi.joynic.naga</groupId>
+            <artifactId>naming-rpc</artifactId>
         </dependency>
 
         <dependency>

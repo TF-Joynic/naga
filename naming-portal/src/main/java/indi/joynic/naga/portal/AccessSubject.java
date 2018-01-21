@@ -1,4 +1,4 @@
-package indi.joynic.naga;
+package indi.joynic.naga.portal;
 
 /**
  * Access Subject

@@ -1,7 +1,7 @@
-package indi.joynic.naga.server.portal.serviceprovider.register;
+package indi.joynic.naga.portal.server.serviceprovider.register;
 
-import indi.joynic.naga.AbstractPortalAccessor;
-import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.portal.AbstractPortalAccessor;
+import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
 
 public class RegisterOnServerPortalAccessor extends AbstractPortalAccessor<Boolean> {
 

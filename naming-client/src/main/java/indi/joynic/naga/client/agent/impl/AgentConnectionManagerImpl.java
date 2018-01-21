@@ -5,7 +5,7 @@
 package indi.joynic.naga.client.agent.impl;
 
 import indi.joynic.naga.client.agent.AgentConnectionManager;
-import indi.joynic.naga.client.rpc.RpcConnection;
+import indi.joynic.naga.rpc.connection.RpcConnection;
 
 
 /**

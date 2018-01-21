@@ -4,7 +4,7 @@ import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
 import indi.joynic.naga.lib.ServiceProviderServiceNode;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
-import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
 import indi.joynic.naga.server.registry.storage.RegistryStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.thrift.TException;

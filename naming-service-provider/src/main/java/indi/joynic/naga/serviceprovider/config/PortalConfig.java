@@ -1,14 +1,9 @@
 package indi.joynic.naga.serviceprovider.config;
 
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
-import indi.joynic.naga.server.portal.serviceprovider.register.RegisterOnServerPortalAccessor;
-import indi.joynic.naga.server.portal.serviceprovider.register.RegisterOnServerSubjectWithThrift;
-import indi.joynic.naga.server.portal.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerPortalAccessor;
+import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerSubjectWithThrift;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TSocket;
-import org.apache.thrift.transport.TTransport;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

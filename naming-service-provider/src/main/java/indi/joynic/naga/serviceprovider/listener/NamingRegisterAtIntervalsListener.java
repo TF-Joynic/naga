@@ -23,7 +23,9 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Co
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 
-        NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask
+
+        // TODO
+        /*NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask
                 = new NamingRegisterAtIntervalsTask(hosts, registerInterval);
 
         Thread namingRegisterAtIntervalsThread = new Thread(namingRegisterAtIntervalsTask);
@@ -31,6 +33,6 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Co
         namingRegisterAtIntervalsThread.setDaemon(true);
         namingRegisterAtIntervalsThread.start();
 
-        logger.info("namingRegisterAtIntervalsThread started! " + System.currentTimeMillis());
+        logger.info("namingRegisterAtIntervalsThread started! " + System.currentTimeMillis());*/
     }
 }
