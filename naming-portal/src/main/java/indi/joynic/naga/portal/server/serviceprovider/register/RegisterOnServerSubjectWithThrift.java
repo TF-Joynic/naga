@@ -38,7 +38,7 @@ public class RegisterOnServerSubjectWithThrift implements AccessSubject<Boolean>
         boolean accessResult = false;
 
         try {
-
+            
             accessResult = accessClient.doRegister(accessArgs.getNamespace(),
                     accessArgs.getProtocolType(), accessArgs.getServiceName(), accessArgs.getHost(),
                     accessArgs.getPort(), accessArgs.getWeight());

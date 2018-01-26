@@ -3,8 +3,8 @@ package indi.joynic.naga.agent.registry;
 import indi.joynic.naga.lib.Registry;
 
 /**
- * client-side local registry.
- * when the naming server is down or unreachable, client uses local cache.
+ * local registry.
+ * when the naming server is down or unreachable, return cached registry data to client.
  *
  * @author Terrance Fung
  * @since 1.0

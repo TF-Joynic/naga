@@ -20,23 +20,23 @@ public class ThriftRpcProtocolImpl implements ThriftRpcProtocol {
     private TProtocol outputProtocol;
 
     public ThriftRpcProtocolImpl(Class<? extends TProtocol> inputProtocolClazz,
-                                 Class<? extends TProtocol> outputProtocolClazz, ThriftRpcConnection rpcConnection) {
+                                 Class<? extends TProtocol> outputProtocolClazz,
+                                 ThriftRpcConnection rpcConnection)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
-        try {
-            this.inputProtocol = inputProtocolClazz.getDeclaredConstructor(TTransport.class).newInstance(rpcConnection.getConnection());
-            this.outputProtocol = outputProtocolClazz.getDeclaredConstructor(TTransport.class).newInstance(rpcConnection.getConnection());
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        this.inputProtocol = inputProtocolClazz.getDeclaredConstructor(TTransport.class)
+                .newInstance(rpcConnection.getConnection());
+
+        this.outputProtocol = outputProtocolClazz.getDeclaredConstructor(TTransport.class)
+                .newInstance(rpcConnection.getConnection());
 
     }
 
-    public ThriftRpcProtocolImpl(Class<? extends TProtocol> rpcProtocolClazz, ThriftRpcConnection rpcConnection) {
-        try {
-            this.inputProtocol = rpcProtocolClazz.getDeclaredConstructor(TTransport.class).newInstance(rpcConnection.getConnection());
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+    public ThriftRpcProtocolImpl(Class<? extends TProtocol> rpcProtocolClazz, ThriftRpcConnection rpcConnection)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+
+        this.inputProtocol = rpcProtocolClazz.getDeclaredConstructor(TTransport.class)
+                .newInstance(rpcConnection.getConnection());
 
         this.outputProtocol = this.inputProtocol;
     }

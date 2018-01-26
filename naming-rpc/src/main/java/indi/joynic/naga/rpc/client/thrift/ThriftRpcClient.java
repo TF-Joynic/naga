@@ -8,11 +8,15 @@ import indi.joynic.naga.rpc.client.RpcClient;
 import indi.joynic.naga.rpc.connection.thrift.ThriftRpcConnection;
 import org.apache.thrift.TServiceClient;
 
+import java.io.IOException;
+
 public interface ThriftRpcClient<Client extends TServiceClient> extends RpcClient {
 
-    void open() throws Exception ;
+    Client getClient() throws Exception;
 
-    Client getClient();
+    ThriftRpcConnection getConnection() throws Exception;
 
-    ThriftRpcConnection getConnection();
+    void open() throws Exception;
+
+    void close() throws IOException;
 }

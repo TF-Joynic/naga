@@ -12,7 +12,6 @@ import org.apache.thrift.scheme.StandardScheme;
 
 import org.apache.thrift.scheme.TupleScheme;
 import org.apache.thrift.protocol.TTupleProtocol;
-import org.apache.thrift.protocol.TProtocolException;
 import org.apache.thrift.EncodingUtils;
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
@@ -22,13 +21,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.EnumMap;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
 import javax.annotation.Generated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +40,7 @@ public class ThriftNamingServerPortal {
 
   public interface AsyncIface {
 
-    public void doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
+    public boolean doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight, AsyncMethodCallback resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -115,11 +110,12 @@ public class ThriftNamingServerPortal {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight, org.apache.thrift.async.AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
+    public boolean doRegister(String ns, String protocolType, String serviceName, String host, int port, int weight, AsyncMethodCallback resultHandler) throws org.apache.thrift.TException {
       checkReady();
       doRegister_call method_call = new doRegister_call(ns, protocolType, serviceName, host, port, weight, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
+      return false;
     }
 
     public static class doRegister_call extends org.apache.thrift.async.TAsyncMethodCall {

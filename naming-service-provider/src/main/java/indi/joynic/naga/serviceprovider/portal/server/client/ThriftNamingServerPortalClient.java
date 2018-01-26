@@ -1,28 +1,38 @@
 package indi.joynic.naga.serviceprovider.portal.server.client;
 
-import indi.joynic.naga.rpc.client.thrift.ThriftRpcClient;
-import indi.joynic.naga.rpc.client.thrift.impl.ThriftRpcClientImpl;
 import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.rpc.client.thrift.ThriftRpcClient;
+import indi.joynic.naga.rpc.connection.thrift.ThriftRpcConnection;
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
+@Component
 public class ThriftNamingServerPortalClient implements ThriftNamingServerPortal.Iface {
 
+    private static final Logger logger = LoggerFactory.getLogger(ThriftNamingServerPortalClient.class);
+
+    @Resource
     private ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient;
 
-    public ThriftNamingServerPortalClient(Class<? extends TProtocol> rpcProtocolClazz,
-                                          Class<? extends TTransport> transportClazz, String host, int port, int timeout) {
-
-        rpcClient = new ThriftRpcClientImpl<>(ThriftNamingServerPortal.Client.class,
-                rpcProtocolClazz, transportClazz, host, port, timeout);
-
-    }
+    /*public ThriftNamingServerPortalClient(ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient) {
+        this.rpcClient = rpcClient;
+    }*/
 
     @Override
     public boolean doRegister(String ns, String protocolType, String serviceName,
                               String host, int port, int weight) throws TException {
 
-        return rpcClient.getClient().doRegister(ns, protocolType, serviceName, host, port, weight);
+        try (ThriftRpcConnection connection = rpcClient.getConnection()) {
+            return rpcClient.getClient().doRegister(ns, protocolType, serviceName, host, port, weight);
+        } catch (Exception e) {
+            logger.error("call doRegister err! msg: {}", e.getMessage());
+        }
+
+        return false;
     }
+
 }

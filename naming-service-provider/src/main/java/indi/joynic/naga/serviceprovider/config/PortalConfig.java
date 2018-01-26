@@ -1,10 +1,11 @@
 package indi.joynic.naga.serviceprovider.config;
 
-import indi.joynic.naga.lib.utils.SocketAddrUtil;
-import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerPortalAccessor;
-import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerSubjectWithThrift;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanInstantiationException;
+import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
+import indi.joynic.naga.rpc.client.thrift.ThriftRpcClient;
+import indi.joynic.naga.rpc.client.thrift.impl.ThriftRpcClientBuilder;
+import indi.joynic.naga.rpc.config.ThriftRpcConfig;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.transport.TSocket;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,9 @@ public class PortalConfig {
 
     @Value("${naming.register.interval}")
     private Long registerInterval;
+
+    @Value("${naming.register.timeout}")
+    private int registerTimeout;
 
     @Value("${naming.serviceprovider.namespace}")
     private String namespace;
@@ -33,48 +37,35 @@ public class PortalConfig {
     @Value("${naming.serviceprovider.weight}")
     private Integer weight;
 
-    /**
-     * TODO: getConnection(connpool, pick connection should apply LB rule)
-     *
-     * not bean
-     *
-     * @return
-     */
-    @Bean
-    public RegisterOnServerPortalAccessor registerOnServerPortalAccessor() {
 
-        if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(protocolType)
-                || StringUtils.isEmpty(serviceName)) {
+    public ThriftRpcConfig thriftRpcConfig() {
 
-            throw new BeanInstantiationException(RegisterOnServerPortalAccessor.class,
-                    "invalid RegisterOnServerPortalAccessor initiate args -> ns: "+ namespace
-                            + ", protocolType: " + protocolType + " or serviceName: " + serviceName);
+        ThriftRpcConfig thriftRpcConfig = new ThriftRpcConfig();
+        thriftRpcConfig.setClientClazz(ThriftNamingServerPortal.Client.class);
+        thriftRpcConfig.setProtocolClazz(TBinaryProtocol.class);
+        thriftRpcConfig.setTransportClazz(TSocket.class);
+        thriftRpcConfig.setHost(hosts);
+        thriftRpcConfig.setPort(port);
+        thriftRpcConfig.setTimeoutMillis(registerTimeout);
 
-        }
-
-        RegisterOnServerSubjectWithThrift.AccessArgs accessArgs
-                = new RegisterOnServerSubjectWithThrift.AccessArgs();
-
-        accessArgs.setNamespace(namespace);
-        accessArgs.setProtocolType(protocolType.toUpperCase());
-        accessArgs.setServiceName(serviceName);
-
-        accessArgs.setHost(SocketAddrUtil.getIntranetIp());
-
-        SocketAddrUtil.checkPort(port);
-        accessArgs.setPort(port);
-
-        if (null == weight || 0 == weight) {
-            throw new BeanInstantiationException(RegisterOnServerPortalAccessor.class, "invalid node weight: "+ weight);
-        }
-
-        accessArgs.setWeight(weight);
-
-        // TODO: fix me
-        return null;
-
-        /*ThriftNamingServerPortal.Iface client = new ThriftNamingServerPortal.Client();
-
-        return new RegisterOnServerPortalAccessor(accessArgs, );*/
+        return thriftRpcConfig;
     }
+
+    @Bean
+    public ThriftRpcClient<ThriftNamingServerPortal.Client> thriftNamingServerPortalClient() {
+
+        ThriftRpcClientBuilder<ThriftNamingServerPortal.Client> thriftRpcClientBuilder
+                = new ThriftRpcClientBuilder<>(thriftRpcConfig());
+
+        ThriftRpcClient<ThriftNamingServerPortal.Client> thriftRpcClient = null;
+
+        try {
+            thriftRpcClient = thriftRpcClientBuilder.build();
+        } catch (Exception e) {
+            return null;
+        }
+
+        return thriftRpcClient;
+    }
+
 }

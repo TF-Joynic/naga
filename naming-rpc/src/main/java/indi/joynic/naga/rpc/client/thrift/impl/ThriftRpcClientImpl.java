@@ -15,6 +15,7 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -31,15 +32,58 @@ public class ThriftRpcClientImpl<Client extends TServiceClient> implements Thrif
 
     private Class<? extends TServiceClient> clientClazz;
 
-    public ThriftRpcClientImpl(Class<? extends TServiceClient> clientClazz, Class<? extends TProtocol> rpcProtocolClazz,
-                               Class<? extends TTransport> transportClazz, String host, int port, int timeout) {
+    /**
+     * Constructor using same input protocol & output protocol
+     *
+     * @param clientClazz
+     * @param rpcProtocolClazz
+     * @param transportClazz
+     * @param host
+     * @param port
+     * @param timeout
+     */
+    public ThriftRpcClientImpl(Class<? extends TServiceClient> clientClazz,
+                               Class<? extends TProtocol> rpcProtocolClazz,
+                               Class<? extends TTransport> transportClazz,
+                               String host,
+                               int port,
+                               int timeout)
+            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
+        // TODO: Delegate Adapter on ConnectionProvider
         this.connection = new ThriftRpcConnectionImpl(transportClazz, host, port, timeout);
         this.protocol = new ThriftRpcProtocolImpl(rpcProtocolClazz, connection);
         this.clientClazz = clientClazz;
     }
 
-    public Client getClient() {
+    /**
+     * Constructor using different input protocol & output protocol
+     *
+     * @param clientClazz
+     * @param inputRpcProtocolClazz
+     * @param outputRpcProtocolClazz
+     * @param transportClazz
+     * @param host
+     * @param port
+     * @param timeout
+     */
+    public ThriftRpcClientImpl(Class<? extends TServiceClient> clientClazz,
+                               Class<? extends TProtocol> inputRpcProtocolClazz,
+                               Class<? extends TProtocol> outputRpcProtocolClazz,
+                               Class<? extends TTransport> transportClazz,
+                               String host,
+                               int port,
+                               int timeout)
+            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+
+        this.connection = new ThriftRpcConnectionImpl(transportClazz, host, port, timeout);
+        this.protocol = new ThriftRpcProtocolImpl(inputRpcProtocolClazz, outputRpcProtocolClazz, connection);
+        this.clientClazz = clientClazz;
+    }
+
+    public Client getClient() throws InvocationTargetException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException {
+
         if (null != client) {
             return client;
         }
@@ -49,41 +93,37 @@ public class ThriftRpcClientImpl<Client extends TServiceClient> implements Thrif
     }
 
     @SuppressWarnings("unchecked")
-    private void getServiceClient() {
-        try {
-            Class<?>[] subs = clientClazz.getClasses();
-            if (null == subs) {
-                throw new NullPointerException("Thrift service client Factory clazz NOT found!");
+    private void getServiceClient() throws SecurityException, NoSuchMethodException,
+            IllegalAccessException, InstantiationException, InvocationTargetException {
+
+        Class<?>[] subs = clientClazz.getClasses();
+        if (null == subs) {
+            throw new NoSuchMethodException("Thrift service client Factory clazz NOT found!");
+        }
+
+        String targetFactoryClazzName = clientClazz.getName()
+                + "$" + THRIFT_SERVICE_CLIENT_FACTORY_CLASS_NAME;
+
+        for (Class<?> sub : subs) {
+            if (!sub.getName().equals(targetFactoryClazzName)) {
+                continue;
             }
 
-            for (Class<?> sub : subs) {
+            Method targetMethod = sub.getMethod(THRIFT_SERVICE_CLIENT_FACTORY_METHOD_NAME,
+                    TProtocol.class, TProtocol.class);
 
-                try {
-                    Method targetMethod = sub.getMethod(THRIFT_SERVICE_CLIENT_FACTORY_METHOD_NAME, TProtocol.class, TProtocol.class);
-                    if (null != targetMethod) {
+            if (null != targetMethod) {
 
-                        Object serviceClient = targetMethod.invoke(sub.newInstance(),
-                                protocol.getInputProtocol(), protocol.getOutputProtocol());
+                Object serviceClient = targetMethod.invoke(sub.newInstance(),
+                        protocol.getInputProtocol(), protocol.getOutputProtocol());
 
-                        this.client = (Client) serviceClient;
-                    }
-
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    logger.error("failed to init Service.Client, {}", e.getMessage());
-                    e.printStackTrace();
-                }
+                this.client = (Client) serviceClient;
+                return ;
             }
-        } catch (SecurityException e) {
-            logger.error("getClasses() encountered SecurityException! {}", e.getMessage());
         }
     }
 
-    public ThriftRpcConnection getConnection() {
-        try {
-            this.connection.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public ThriftRpcConnection getConnection() throws Exception {
         return this.connection;
     }
 
@@ -91,5 +131,9 @@ public class ThriftRpcClientImpl<Client extends TServiceClient> implements Thrif
         this.connection.open();
     }
 
+    @Override
+    public void close() throws IOException {
+        this.connection.close();
+    }
 
 }

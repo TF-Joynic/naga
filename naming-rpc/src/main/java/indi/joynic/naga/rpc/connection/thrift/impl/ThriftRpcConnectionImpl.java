@@ -18,12 +18,12 @@ public class ThriftRpcConnectionImpl implements ThriftRpcConnection {
 
     private TTransport connection;
 
-    public ThriftRpcConnectionImpl(Class<? extends TTransport> transportClazz, String host, int port, int timeout) {
-        try {
-            this.connection = transportClazz.getDeclaredConstructor(String.class, int.class, int.class).newInstance(host, port, timeout);
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+    public ThriftRpcConnectionImpl(Class<? extends TTransport> transportClazz, String host, int port, int timeout)
+            throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, InvocationTargetException {
+
+        this.connection = transportClazz.getDeclaredConstructor(String.class, int.class, int.class)
+                .newInstance(host, port, timeout);
     }
 
     @Override

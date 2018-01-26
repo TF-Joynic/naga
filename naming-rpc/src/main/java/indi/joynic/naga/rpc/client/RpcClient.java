@@ -2,6 +2,8 @@ package indi.joynic.naga.rpc.client;
 
 import indi.joynic.naga.rpc.connection.RpcConnection;
 
-public interface RpcClient {
-    RpcConnection getConnection();
+import java.io.Closeable;
+
+public interface RpcClient extends Closeable {
+    RpcConnection getConnection() throws Exception;
 }
