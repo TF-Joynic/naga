@@ -1,5 +1,6 @@
 package indi.joynic.naga.serviceprovider.config;
 
+import indi.joynic.naga.lib.utils.SocketAddrUtil;
 import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
 import indi.joynic.naga.rpc.client.thrift.ThriftRpcClient;
 import indi.joynic.naga.rpc.client.thrift.impl.ThriftRpcClientBuilder;
@@ -38,14 +39,16 @@ public class PortalConfig {
     private Integer weight;
 
 
-    public ThriftRpcConfig thriftRpcConfig() {
+    private ThriftRpcConfig thriftRpcConfig() {
 
         ThriftRpcConfig thriftRpcConfig = new ThriftRpcConfig();
         thriftRpcConfig.setClientClazz(ThriftNamingServerPortal.Client.class);
         thriftRpcConfig.setProtocolClazz(TBinaryProtocol.class);
         thriftRpcConfig.setTransportClazz(TSocket.class);
-        thriftRpcConfig.setHost(hosts);
-        thriftRpcConfig.setPort(port);
+
+        String[] hostPortArr = SocketAddrUtil.splitHostPort(hosts);
+        thriftRpcConfig.setHost(hostPortArr[0]);
+        thriftRpcConfig.setPort(Integer.valueOf(hostPortArr[1]));
         thriftRpcConfig.setTimeoutMillis(registerTimeout);
 
         return thriftRpcConfig;

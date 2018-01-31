@@ -1,5 +1,6 @@
 package indi.joynic.naga.lib.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -33,6 +34,25 @@ public class SocketAddrUtil {
         }
 
         return ip;
+    }
+
+    public static String[] splitHostPort(String hosts) {
+        return splitHostPort(hosts, ":");
+    }
+
+    public static String[] splitHostPort(String hosts, String separator) {
+        if (StringUtils.isEmpty(hosts) || StringUtils.isEmpty(separator)) {
+            throw new IllegalArgumentException("hosts can not be null!");
+        }
+
+        hosts = hosts.trim();
+        String[] hostPortArr = hosts.split(separator);
+
+        if (2 != hostPortArr.length) {
+            throw new IllegalArgumentException("hosts is not format of [ip:port]!");
+        }
+
+        return hostPortArr;
     }
 
 }

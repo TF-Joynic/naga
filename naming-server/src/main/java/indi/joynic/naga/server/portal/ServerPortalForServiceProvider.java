@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class ServerPortalForServiceProvider extends AbstractNamingServicePortal implements ThriftNamingServerPortal.Iface {
+public class ServerPortalForServiceProvider implements ThriftNamingServerPortal.Iface {
 
     @Resource
     private RegistryStorage registryStorage;

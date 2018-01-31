@@ -24,4 +24,18 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>naga-naming-agent</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 </project>

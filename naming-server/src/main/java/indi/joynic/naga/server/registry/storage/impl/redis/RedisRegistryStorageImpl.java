@@ -74,7 +74,7 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         String key = implodeKeys(namespace, serviceName, protocolName);
 
         String value = implodeValues(serverNode.getInetSocketAddress().getHostString(),
-                String.valueOf(serverNode.getInetSocketAddress().getPort()));
+                String.valueOf(serverNode.getInetSocketAddress().getPort()), String.valueOf(serverNode.getWeight()));
 
         redisRegistryTemplate.opsForHash().put(registryDataHashKey, key, value);
 

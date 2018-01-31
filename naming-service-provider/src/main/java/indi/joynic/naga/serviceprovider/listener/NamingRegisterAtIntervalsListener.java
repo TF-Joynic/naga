@@ -1,34 +1,70 @@
 package indi.joynic.naga.serviceprovider.listener;
 
+import indi.joynic.naga.lib.utils.DateTimeUtil;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
-import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerPortalAccessor;
 import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerSubjectWithThrift;
 import indi.joynic.naga.serviceprovider.portal.server.client.ThriftNamingServerPortalClient;
 import indi.joynic.naga.serviceprovider.task.NamingRegisterAtIntervalsTask;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanInstantiationException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
-@Component
-public class NamingRegisterAtIntervalsListener implements ApplicationListener<ContextRefreshedEvent> {
+public class NamingRegisterAtIntervalsListener implements ServletContextListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NamingRegisterAtIntervalsListener.class);
 
-    @Value("${naming.server.hosts}")
+    private ThriftNamingServerPortalClient thriftNamingServerPortalClient;
+    private RegisterOnServerSubjectWithThrift.AccessArgs accessArgs;
+    private Long registerInterval;
+    public NamingRegisterAtIntervalsListener(ThriftNamingServerPortalClient thriftNamingServerPortalClient,
+                                             RegisterOnServerSubjectWithThrift.AccessArgs accessArgs, Long registerInterval) {
+
+        this.thriftNamingServerPortalClient = thriftNamingServerPortalClient;
+        this.accessArgs = accessArgs;
+        this.registerInterval = registerInterval;
+    }
+
+    public static RegisterOnServerSubjectWithThrift.AccessArgs buildAccessArgs(String namespace,
+                                                                               String protocolType,
+                                                                               String serviceName,
+                                                                               Integer port,
+                                                                               Integer weight
+                                                                               ) {
+
+        if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(protocolType)
+                || StringUtils.isEmpty(serviceName) || null == weight) {
+
+            throw new IllegalArgumentException(
+                    "invalid RegisterOnServerPortalAccessor initiate args -> ns: "+ namespace
+                            + ", protocolType: " + protocolType
+                            + " or serviceName: " + serviceName + " or weight: " + weight);
+
+        }
+
+        RegisterOnServerSubjectWithThrift.AccessArgs accessArgs
+                = new RegisterOnServerSubjectWithThrift.AccessArgs();
+
+        accessArgs.setNamespace(namespace);
+        accessArgs.setProtocolType(protocolType.toUpperCase());
+        accessArgs.setServiceName(serviceName);
+
+        accessArgs.setHost(SocketAddrUtil.getIntranetIp());
+
+        SocketAddrUtil.checkPort(port);
+        accessArgs.setPort(port);
+        accessArgs.setWeight(weight);
+
+        return accessArgs;
+    }
+
+    /*@Value("${naming.server.hosts}")
     private String hosts;
 
     @Value("${naming.register.interval}")
     private Long registerInterval;
-
-    @Value("${naming.register.timeout}")
-    private int registerTimeout;
 
     @Value("${naming.serviceprovider.namespace}")
     private String namespace;
@@ -46,40 +82,10 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Co
     private Integer weight;
 
     @Resource
-    private ThriftNamingServerPortalClient thriftNamingServerPortalClient;
-
+    private ThriftNamingServerPortalClient thriftNamingServerPortalClient;*/
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
-        // TODO
-        if (StringUtils.isEmpty(namespace) || StringUtils.isEmpty(protocolType)
-                || StringUtils.isEmpty(serviceName)) {
-
-            throw new BeanInstantiationException(RegisterOnServerPortalAccessor.class,
-                    "invalid RegisterOnServerPortalAccessor initiate args -> ns: "+ namespace
-                            + ", protocolType: " + protocolType + " or serviceName: " + serviceName);
-
-        }
-
-        RegisterOnServerSubjectWithThrift.AccessArgs accessArgs
-                = new RegisterOnServerSubjectWithThrift.AccessArgs();
-
-        accessArgs.setNamespace(namespace);
-        accessArgs.setProtocolType(protocolType.toUpperCase());
-        accessArgs.setServiceName(serviceName);
-
-        accessArgs.setHost(SocketAddrUtil.getIntranetIp());
-
-        SocketAddrUtil.checkPort(port);
-        accessArgs.setPort(port);
-
-        if (null == weight || 0 == weight) {
-            logger.error("invalid node weight: "+ weight);
-        }
-
-        accessArgs.setWeight(weight);
-
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
         NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask
                 = new NamingRegisterAtIntervalsTask(accessArgs, thriftNamingServerPortalClient, registerInterval);
 
@@ -88,6 +94,11 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Co
         namingRegisterAtIntervalsThread.setDaemon(true);
         namingRegisterAtIntervalsThread.start();
 
-        logger.info("namingRegisterAtIntervalsThread started! " + System.currentTimeMillis());
+        logger.info("namingRegisterAtIntervalsThread started! " + DateTimeUtil.date(DateTimeUtil.DEFAULT_PATTERN));
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        logger.info("namingRegisterAtIntervalsThread stop! " + DateTimeUtil.date(DateTimeUtil.DEFAULT_PATTERN));
     }
 }
