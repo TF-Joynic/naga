@@ -6,16 +6,16 @@ import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+public class NamingRegisterTask implements Runnable {
 
-public class NamingRegisterAtIntervalsTask implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(NamingRegisterAtIntervalsTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(NamingRegisterTask.class);
 
     private RegisterOnServerSubjectWithThrift.AccessArgs accessArgs;
     private ThriftNamingServerPortal.Iface client;
     private Long intervalTimeMillis;
 
-    public NamingRegisterAtIntervalsTask(RegisterOnServerSubjectWithThrift.AccessArgs accessArgs,
-                                         ThriftNamingServerPortal.Iface client, Long intervalTimeMillis) {
+    public NamingRegisterTask(RegisterOnServerSubjectWithThrift.AccessArgs accessArgs,
+                              ThriftNamingServerPortal.Iface client, Long intervalTimeMillis) {
 
         this.accessArgs = accessArgs;
         this.client = client;
@@ -31,17 +31,8 @@ public class NamingRegisterAtIntervalsTask implements Runnable {
 
             boolean registerResult = accessor.access();
 
-            logger.info("thread: {}-{} register on server result: {}", Thread.currentThread().getId(),
+            logger.info("thread: {} register on server result: {}",
                     Thread.currentThread().getName(), registerResult);
-
-            try {
-                Thread.sleep(intervalTimeMillis);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
-
-
-
 }

@@ -4,17 +4,32 @@ import indi.joynic.naga.lib.utils.DateTimeUtil;
 import indi.joynic.naga.lib.utils.SocketAddrUtil;
 import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerSubjectWithThrift;
 import indi.joynic.naga.serviceprovider.portal.server.client.ThriftNamingServerPortalClient;
-import indi.joynic.naga.serviceprovider.task.NamingRegisterAtIntervalsTask;
+import indi.joynic.naga.serviceprovider.task.NamingRegisterTask;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.ContextStoppedEvent;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
-public class NamingRegisterAtIntervalsListener implements ServletContextListener {
+public class NamingRegisterAtIntervalsListener implements ApplicationListener<ApplicationEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(NamingRegisterAtIntervalsListener.class);
+
+    private static final ScheduledExecutorService registerScheduledThreadPool = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r);
+            thread.setName(r.getClass().getSimpleName());
+            return thread;
+        }
+    });
 
     private ThriftNamingServerPortalClient thriftNamingServerPortalClient;
     private RegisterOnServerSubjectWithThrift.AccessArgs accessArgs;
@@ -60,45 +75,33 @@ public class NamingRegisterAtIntervalsListener implements ServletContextListener
         return accessArgs;
     }
 
-    /*@Value("${naming.server.hosts}")
-    private String hosts;
+    private void contextStarted(ContextStartedEvent contextStartedEvent) {
 
-    @Value("${naming.register.interval}")
-    private Long registerInterval;
+        NamingRegisterTask namingRegisterTask
+                = new NamingRegisterTask(accessArgs, thriftNamingServerPortalClient, registerInterval);
 
-    @Value("${naming.serviceprovider.namespace}")
-    private String namespace;
+        registerScheduledThreadPool
+                .scheduleAtFixedRate(namingRegisterTask, 5000L,
+                        registerInterval, TimeUnit.MILLISECONDS);
 
-    @Value("${naming.serviceprovider.protocoltype}")
-    private String protocolType;
-
-    @Value("${naming.serviceprovider.servicename}")
-    private String serviceName;
-
-    @Value("${naming.serviceprovider.port}")
-    private Integer port;
-
-    @Value("${naming.serviceprovider.weight}")
-    private Integer weight;
-
-    @Resource
-    private ThriftNamingServerPortalClient thriftNamingServerPortalClient;*/
-
-    @Override
-    public void contextInitialized(ServletContextEvent servletContextEvent) {
-        NamingRegisterAtIntervalsTask namingRegisterAtIntervalsTask
-                = new NamingRegisterAtIntervalsTask(accessArgs, thriftNamingServerPortalClient, registerInterval);
-
-        Thread namingRegisterAtIntervalsThread = new Thread(namingRegisterAtIntervalsTask);
-        namingRegisterAtIntervalsThread.setName("namingRegisterAtIntervals");
-        namingRegisterAtIntervalsThread.setDaemon(true);
-        namingRegisterAtIntervalsThread.start();
-
-        logger.info("namingRegisterAtIntervalsThread started! " + DateTimeUtil.date(DateTimeUtil.DEFAULT_PATTERN));
+        logger.info("register listener initialized! "
+                + DateTimeUtil.date(DateTimeUtil.DATETIME2MILLIS));
     }
 
+    public void contextStopped(ContextStoppedEvent contextStoppedEvent) {
+        registerScheduledThreadPool.shutdown();
+
+        logger.info("register listener destroyed! "
+                + DateTimeUtil.date(DateTimeUtil.DATETIME2MILLIS));
+    }
+
+
     @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.info("namingRegisterAtIntervalsThread stop! " + DateTimeUtil.date(DateTimeUtil.DEFAULT_PATTERN));
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        if (applicationEvent instanceof ContextStartedEvent) {
+            contextStarted((ContextStartedEvent) applicationEvent);
+        } else if (applicationEvent instanceof ContextStoppedEvent) {
+            contextStopped((ContextStoppedEvent) applicationEvent);
+        }
     }
 }

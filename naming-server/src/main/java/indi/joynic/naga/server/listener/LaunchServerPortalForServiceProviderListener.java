@@ -7,15 +7,19 @@ import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.ContextStoppedEvent;
 
 import javax.annotation.Resource;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-@Component
-public class LaunchServerPortalForServiceProviderListener implements ApplicationListener<ContextRefreshedEvent> {
+public class LaunchServerPortalForServiceProviderListener implements ApplicationListener<ApplicationEvent> {
+    private static final Logger logger = LoggerFactory.getLogger(LaunchServerPortalForServiceProviderListener.class);
 
     @Value("${naming.server.serviceprovider.port}")
     private Integer serverPort;
@@ -23,8 +27,11 @@ public class LaunchServerPortalForServiceProviderListener implements Application
     @Resource
     private ThriftNamingServerPortal.Iface serverPortalForServiceProvider;
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+    private static TServer tServer = null;
+    private static final AtomicBoolean serverStarted = new AtomicBoolean(false);
+
+    public void contextStarted(ContextStartedEvent contextStartedEvent) {
+
         TProcessor tprocessor = new ThriftNamingServerPortal.Processor<>(
                 serverPortalForServiceProvider);
 
@@ -37,10 +44,29 @@ public class LaunchServerPortalForServiceProviderListener implements Application
 
             // Thrift SimpleServer & BinaryProtocol for test
             tArgs.protocolFactory(new TBinaryProtocol.Factory());
-            TServer server = new TSimpleServer(tArgs);
-            server.serve();
+            tServer = new TSimpleServer(tArgs);
+
+            serverStarted.compareAndSet(false, true);
+
+            logger.warn("LaunchServerPortalForServiceProviderListener started");
+            tServer.serve();
         } catch (TTransportException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void contextStopped(ContextStoppedEvent contextStoppedEvent) {
+        if (serverStarted.get() && null != tServer) {
+            tServer.stop();
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        if (applicationEvent instanceof ContextStartedEvent) {
+            contextStarted((ContextStartedEvent) applicationEvent);
+        } else if (applicationEvent instanceof ContextStoppedEvent) {
+            contextStopped((ContextStoppedEvent) applicationEvent);
         }
     }
 }

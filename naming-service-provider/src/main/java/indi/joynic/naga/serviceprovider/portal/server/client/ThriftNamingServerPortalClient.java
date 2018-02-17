@@ -18,9 +18,6 @@ public class ThriftNamingServerPortalClient implements ThriftNamingServerPortal.
     @Resource
     private ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient;
 
-    /*public ThriftNamingServerPortalClient(ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient) {
-        this.rpcClient = rpcClient;
-    }*/
 
     @Override
     public boolean doRegister(String ns, String protocolType, String serviceName,
