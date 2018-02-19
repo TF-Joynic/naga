@@ -1,10 +1,16 @@
 package indi.joynic.naga.lib.utils;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class SocketAddrUtil {
+
+    public static final String LOCAL_HOST = "127.0.0.1";
 
     /**
      * check if the given port is legal or not, if not an IllegalArgumentException
@@ -55,4 +61,34 @@ public class SocketAddrUtil {
         return hostPortArr;
     }
 
+    public static boolean portUsed(int port) {
+        return portUsed(port, LOCAL_HOST);
+    }
+
+    public static boolean portUsed(int port, String host) {
+        int checkedPort = checkPort(port);
+
+        if (StringUtils.isAnyBlank(host)) {
+            throw new IllegalArgumentException("Specified host is invalid");
+        }
+
+        boolean portUsed = false;
+        // try to connect to given port
+        Socket socket = new Socket();
+        try {
+            socket.bind(new InetSocketAddress(host, checkedPort));
+        } catch (IOException e) {
+            portUsed = true;
+        } finally {
+            if (!socket.isClosed()) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return portUsed;
+    }
 }

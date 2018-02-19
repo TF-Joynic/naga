@@ -1,5 +1,6 @@
 package indi.joynic.naga.serviceprovider.task;
 
+import indi.joynic.naga.lib.utils.SocketAddrUtil;
 import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerPortalAccessor;
 import indi.joynic.naga.portal.server.serviceprovider.register.RegisterOnServerSubjectWithThrift;
 import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
@@ -24,15 +25,18 @@ public class NamingRegisterTask implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            // registering to naming server...
-            RegisterOnServerPortalAccessor accessor
-                    = new RegisterOnServerPortalAccessor(accessArgs, client);
-
-            boolean registerResult = accessor.access();
-
-            logger.info("thread: {} register on server result: {}",
-                    Thread.currentThread().getName(), registerResult);
+        if (!SocketAddrUtil.portUsed(accessArgs.getPort())) {
+            logger.warn("port is not launched!");
+            return ;
         }
+
+        // registering to naming server...
+        RegisterOnServerPortalAccessor accessor
+                = new RegisterOnServerPortalAccessor(accessArgs, client);
+
+        boolean registerResult = accessor.access();
+
+        logger.info("thread: {} register on server result: {}",
+                Thread.currentThread().getName(), registerResult);
     }
 }
