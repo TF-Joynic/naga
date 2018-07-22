@@ -1,4 +1,4 @@
-package indi.joynic.naga.server.portal;
+package indi.joynic.naga.server.rpcserver.definition;
 
 import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.ProtocolType;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-@Service
+@Service(value = "serverPortalForServiceProvider")
 public class ServerPortalForServiceProvider implements ThriftNamingServerPortal.Iface {
 
     @Resource

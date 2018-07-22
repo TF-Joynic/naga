@@ -22,7 +22,9 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
 
     private static final Logger logger = LoggerFactory.getLogger(NamingRegisterAtIntervalsListener.class);
 
-    private static final ScheduledExecutorService registerScheduledThreadPool = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+    private static final ScheduledExecutorService registerScheduledThreadPool
+            = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+
         @Override
         public Thread newThread(Runnable r) {
             Thread thread = new Thread(r);

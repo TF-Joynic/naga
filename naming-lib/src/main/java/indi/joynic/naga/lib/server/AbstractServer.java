@@ -13,7 +13,17 @@ public abstract class AbstractServer implements Server {
         started = true;
     }
 
-    public abstract void doStart();
+    protected abstract void doStart();
+
+    protected abstract void doStop();
+
+    public boolean isStarted() {
+        return this.started;
+    }
+
+    public void stop() {
+        new ServerTerminator().start();
+    }
 
     /**
      * invoke start()
@@ -26,6 +36,16 @@ public abstract class AbstractServer implements Server {
 
             } finally {
                 
+            }
+        }
+    }
+
+    class ServerTerminator extends Thread {
+        public void run() {
+            try {
+                doStop();
+            } finally {
+
             }
         }
     }
