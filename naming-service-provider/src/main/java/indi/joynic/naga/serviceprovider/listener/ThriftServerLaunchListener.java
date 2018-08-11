@@ -1,6 +1,6 @@
 package indi.joynic.naga.serviceprovider.listener;
 
-import indi.joynic.naga.lib.server.RpcServer;
+import indi.joynic.naga.lib.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,7 +16,7 @@ public class ThriftServerLaunchListener implements ApplicationListener<Applicati
             = LoggerFactory.getLogger(ThriftServerLaunchListener.class);
 
     @Resource
-    private RpcServer rpcServer;
+    private Server rpcServer;
 
     private void applicationReady(ApplicationReadyEvent applicationReadyEvent) {
         this.rpcServer.start();

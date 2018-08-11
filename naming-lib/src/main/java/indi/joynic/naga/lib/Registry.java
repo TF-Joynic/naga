@@ -14,7 +14,12 @@ import java.util.List;
 public interface Registry {
 
     /**
-     * lookup node server list by specifying service name
+     * register
+     */
+    boolean register(LookupKey lookupKey, ServiceNode serverNode);
+
+    /**
+     * lookup node server list by specifying lookup key
      *
      * @return
      */

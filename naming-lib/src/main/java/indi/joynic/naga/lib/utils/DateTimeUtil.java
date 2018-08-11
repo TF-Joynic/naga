@@ -10,7 +10,7 @@ public final class DateTimeUtil {
 
     public static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
-    public static final String DATETIME2MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATETIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
 
 
     private static ThreadLocal<SimpleDateFormat> threadLocalJar = new ThreadLocal<SimpleDateFormat>();

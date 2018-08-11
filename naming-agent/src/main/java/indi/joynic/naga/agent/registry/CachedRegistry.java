@@ -4,7 +4,7 @@ import indi.joynic.naga.lib.Registry;
 
 /**
  * local registry.
- * when the naming server is down or unreachable, return cached registry data to client.
+ * while the naming server is down or unreachable, return cached registry data to client.
  *
  * @author Terrance Fung
  * @since 1.0

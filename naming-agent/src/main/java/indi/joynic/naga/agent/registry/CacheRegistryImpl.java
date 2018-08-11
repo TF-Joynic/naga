@@ -1,16 +1,17 @@
-package indi.joynic.naga.server.registry;
+package indi.joynic.naga.agent.registry;
 
-import indi.joynic.naga.lib.Registry;
 import indi.joynic.naga.lib.LookupKey;
 import indi.joynic.naga.lib.lb.node.ServiceNode;
 
 import java.util.List;
 
-public class ServerRegistry implements Registry {
+public class CacheRegistryImpl implements CachedRegistry {
+
     @Override
     public boolean register(LookupKey lookupKey, ServiceNode serverNode) {
         return false;
     }
+
 
     @Override
     public List<ServiceNode> lookup(LookupKey lookupKey) {
@@ -21,4 +22,10 @@ public class ServerRegistry implements Registry {
     public boolean evict(LookupKey lookupKey, ServiceNode serverNode) {
         return false;
     }
+
+    @Override
+    public void clear() {
+
+    }
+
 }

@@ -87,14 +87,14 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
                         registerInterval, TimeUnit.MILLISECONDS);
 
         logger.info("register listener initialized! "
-                + DateTimeUtil.date(DateTimeUtil.DATETIME2MILLIS));
+                + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
     }
 
     public void contextStopped(ContextStoppedEvent contextStoppedEvent) {
         registerScheduledThreadPool.shutdown();
 
         logger.info("register listener destroyed! "
-                + DateTimeUtil.date(DateTimeUtil.DATETIME2MILLIS));
+                + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
     }
 
 

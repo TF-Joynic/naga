@@ -18,7 +18,6 @@ public class ThriftNamingServerPortalClient implements ThriftNamingServerPortal.
     @Resource
     private ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient;
 
-
     @Override
     public boolean doRegister(String ns, String protocolType, String serviceName,
                               String host, int port, int weight) throws TException {
@@ -26,7 +25,7 @@ public class ThriftNamingServerPortalClient implements ThriftNamingServerPortal.
         try (ThriftRpcConnection connection = rpcClient.getConnection()) {
             return rpcClient.getClient().doRegister(ns, protocolType, serviceName, host, port, weight);
         } catch (Exception e) {
-            logger.error("call doRegister err! msg: {}", e.getMessage());
+            logger.error("call doRegister err! msg: {}", e);
         }
 
         return false;

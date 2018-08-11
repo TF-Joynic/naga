@@ -3,7 +3,6 @@ package indi.joynic.naga.server.rpcserver;
 import indi.joynic.naga.lib.server.AbstractServer;
 import indi.joynic.naga.portal.server.serviceprovider.service.ThriftNamingServerPortal;
 import org.apache.thrift.TProcessor;
-import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
@@ -11,7 +10,6 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.Resource;
 
@@ -28,8 +26,7 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
 
     private static TServer tServer = null;
 
-    @Resource
-    @Qualifier(value = "serverPortalForServiceProvider")
+    @Resource(name = "serverPortalForServiceProvider")
     private ThriftNamingServerPortal.Iface serverPortalForServiceProvider;
 
     public ThriftSimpleServerOfPortalForServiceProvider(int serverPort, TProtocolFactory protocolFactory) {
@@ -56,7 +53,7 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
             logger.warn("ThriftSimpleServerOfPortalForServiceProvider started and try serve at port: {}", serverPort);
             tServer.serve();
         } catch (TTransportException e) {
-            e.printStackTrace();
+            logger.error("ThriftSimpleServerOfPortalForServiceProvider start failed!", e);
         }
     }
 
