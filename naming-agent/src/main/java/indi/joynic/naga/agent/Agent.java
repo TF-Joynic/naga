@@ -1,6 +1,9 @@
 package indi.joynic.naga.agent;
 
 import indi.joynic.naga.lib.LookupKey;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
+
+import java.util.List;
 
 /**
  * an agent interface that describe its very responsibilities
@@ -31,8 +34,9 @@ public interface Agent {
      * naming lookup
      *
      * @param lookupKey
+     * @return
      */
-    void lookup(LookupKey lookupKey);
+    List<ServiceNode> lookup(LookupKey lookupKey);
 
     /**
      * update local registry cache

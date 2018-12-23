@@ -39,6 +39,7 @@
 		<naming.portal.version>0.0.1-SNAPSHOT</naming.portal.version>
 		<naming.rpc.version>0.0.1-SNAPSHOT</naming.rpc.version>
 		<apache.commons.lang3.version>3.6</apache.commons.lang3.version>
+		<tomcat-embeded-version>8.5.20</tomcat-embeded-version>
 	</properties>
 
 	<dependencyManagement>
@@ -92,6 +93,19 @@
 				<artifactId>commons-lang3</artifactId>
 				<version>${apache.commons.lang3.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.apache.tomcat.embed</groupId>
+				<artifactId>tomcat-embed-core</artifactId>
+				<version>${tomcat-embeded-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>jsr250-api</artifactId>
+				<version>1.0</version>
+			</dependency>
+
 
 		</dependencies>
 	</dependencyManagement>

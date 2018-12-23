@@ -15,12 +15,17 @@ public interface Registry {
 
     /**
      * register
+     *
+     * @param lookupKey
+     * @param serverNode
+     * @return
      */
     boolean register(LookupKey lookupKey, ServiceNode serverNode);
 
     /**
      * lookup node server list by specifying lookup key
      *
+     * @param lookupKey
      * @return
      */
     List<ServiceNode> lookup(LookupKey lookupKey);
@@ -29,6 +34,8 @@ public interface Registry {
      * remove a invalid server node
      * on account of server is no longer able to provide service
      *
+     * @param lookupKey
+     * @param serverNode
      * @return
      */
     boolean evict(LookupKey lookupKey, ServiceNode serverNode);

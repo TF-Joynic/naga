@@ -2,10 +2,18 @@ package indi.joynic.naga.agent;
 
 import indi.joynic.naga.agent.registry.CachedRegistry;
 import indi.joynic.naga.lib.LookupKey;
+import indi.joynic.naga.lib.lb.node.ServiceNode;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AgentImpl implements Agent {
+
+    private CachedRegistry cachedRegistry;
+
+    public AgentImpl(CachedRegistry cachedRegistry) {
+        this.cachedRegistry = cachedRegistry;
+    }
 
     /**
      * 0 - INIT(init config & try connect naming server)
@@ -32,8 +40,8 @@ public class AgentImpl implements Agent {
     }
 
     @Override
-    public void lookup(LookupKey lookupKey) {
-        return CachedRegistry。
+    public List<ServiceNode> lookup(LookupKey lookupKey) {
+        return cachedRegistry.lookup(lookupKey);
     }
 
     @Override

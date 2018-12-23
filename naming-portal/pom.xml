@@ -22,5 +22,10 @@
             <artifactId>naming-lib</artifactId>
             <version>${naming.lib.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

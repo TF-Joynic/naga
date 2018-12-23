@@ -1,13 +1,10 @@
 package indi.joynic.naga.rpc.config;
 
-import indi.joynic.naga.rpc.config.enums.RpcMode;
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 
 public class ThriftRpcConfig extends RpcConfig {
-
-    private RpcMode rpcMode = RpcMode.THRIFT;
 
     private Class<? extends TServiceClient> clientClazz;
     private Class<? extends TProtocol> protocolClazz;

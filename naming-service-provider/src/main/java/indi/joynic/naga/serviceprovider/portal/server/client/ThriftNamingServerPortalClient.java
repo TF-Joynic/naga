@@ -6,17 +6,16 @@ import indi.joynic.naga.rpc.connection.thrift.ThriftRpcConnection;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-
-@Component
 public class ThriftNamingServerPortalClient implements ThriftNamingServerPortal.Iface {
 
     private static final Logger logger = LoggerFactory.getLogger(ThriftNamingServerPortalClient.class);
 
-    @Resource
     private ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient;
+
+    public ThriftNamingServerPortalClient(ThriftRpcClient<ThriftNamingServerPortal.Client> rpcClient) {
+        this.rpcClient = rpcClient;
+    }
 
     @Override
     public boolean doRegister(String ns, String protocolType, String serviceName,

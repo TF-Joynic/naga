@@ -1,6 +1,5 @@
 package indi.joynic.naga.lib.utils;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class SocketAddrUtilTest {
@@ -8,7 +7,11 @@ public class SocketAddrUtilTest {
     public void getIntranetIp() throws Exception {
         String ip = SocketAddrUtil.getIntranetIp();
         System.out.println(ip);
-        Assert.assertEquals(ip, "10.10.102.26");
+    }
+
+    @Test
+    public void testPort() {
+        System.out.println(SocketAddrUtil.portUsed(5679));
     }
 
 }

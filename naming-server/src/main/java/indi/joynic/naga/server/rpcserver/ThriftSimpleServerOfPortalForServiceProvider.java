@@ -7,6 +7,7 @@ import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
+import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
         TProcessor tprocessor = new ThriftNamingServerPortal.Processor<>(
                 serverPortalForServiceProvider);
 
-        TServerSocket serverTransport = null;
+        TServerTransport serverTransport = null;
         try {
             serverTransport = new TServerSocket(serverPort);
 

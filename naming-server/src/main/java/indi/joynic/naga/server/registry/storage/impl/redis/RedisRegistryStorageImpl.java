@@ -105,7 +105,9 @@ public class RedisRegistryStorageImpl implements RegistryStorage {
         return RedisUtil.implode(VALUE_FIELD_SEPARATOR, valueStr);
     }
 
-    private Pair<LookupKey, ServiceNode> locateWithLookupKeyImploded(String lookupKeyImploded, String namespace, String serviceName) {
+    private Pair<LookupKey, ServiceNode> locateWithLookupKeyImploded(String lookupKeyImploded,
+                                                                     String namespace, String serviceName) {
+
         if (StringUtils.isAnyBlank(lookupKeyImploded)) {
             return null;
         }

@@ -8,9 +8,9 @@ import indi.joynic.naga.serviceprovider.task.NamingRegisterTask;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 
 import java.util.concurrent.Executors;
@@ -77,7 +77,7 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
         return accessArgs;
     }
 
-    private void contextStarted(ContextStartedEvent contextStartedEvent) {
+    private void applicationReady(ApplicationReadyEvent applicationReadyEvent) {
 
         NamingRegisterTask namingRegisterTask
                 = new NamingRegisterTask(accessArgs, thriftNamingServerPortalClient, registerInterval);
@@ -100,8 +100,8 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
 
     @Override
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
-        if (applicationEvent instanceof ContextStartedEvent) {
-            contextStarted((ContextStartedEvent) applicationEvent);
+        if (applicationEvent instanceof ApplicationReadyEvent) {
+            applicationReady((ApplicationReadyEvent) applicationEvent);
         } else if (applicationEvent instanceof ContextStoppedEvent) {
             contextStopped((ContextStoppedEvent) applicationEvent);
         }
