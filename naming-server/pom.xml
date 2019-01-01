@@ -52,6 +52,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                    <mainClass>indi.joynic.naga.server.NagaNamingServer</mainClass>
                 </configuration>
 
                 <executions>
@@ -61,14 +62,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>indi.joynic.naga.server.NagaNamingServer</mainClass>
-                </configuration>
             </plugin>
         </plugins>
 
