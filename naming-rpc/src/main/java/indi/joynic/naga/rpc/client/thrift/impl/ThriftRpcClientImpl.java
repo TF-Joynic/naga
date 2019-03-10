@@ -124,6 +124,7 @@ public class ThriftRpcClientImpl<Client extends TServiceClient> implements Thrif
     }
 
     public ThriftRpcConnection getConnection() throws Exception {
+        this.open();
         return this.connection;
     }
 
