@@ -11,6 +11,8 @@ import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -27,7 +29,7 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
 
     private static TServer tServer = null;
 
-    @Resource(name = "serverPortalForServiceProvider")
+    @Resource
     private ThriftNamingServerPortal.Iface serverPortalForServiceProvider;
 
     public ThriftSimpleServerOfPortalForServiceProvider(int serverPort, TProtocolFactory protocolFactory) {
@@ -67,4 +69,6 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
     protected void doStop() {
         tServer.stop();
     }
+
+
 }

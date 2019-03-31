@@ -11,21 +11,16 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
 @Component
 public class LaunchServerPortalForServiceProviderListener implements ApplicationListener<ApplicationEvent> {
     private static final Logger logger = LoggerFactory.getLogger(LaunchServerPortalForServiceProviderListener.class);
 
-    @Value("${naming.server.serviceprovider.port}")
-    private Integer serverPort;
-
+    @Resource
     private ThriftSimpleServerOfPortalForServiceProvider thriftSimpleServerOfPortalForServiceProvider;
 
     public void applicationReady(ApplicationReadyEvent applicationReadyEvent) {
-
-        ThriftSimpleServerOfPortalForServiceProvider thriftSimpleServerOfPortalForServiceProvider
-                = new ThriftSimpleServerOfPortalForServiceProvider(serverPort, new TBinaryProtocol.Factory());
-
-        this.thriftSimpleServerOfPortalForServiceProvider = thriftSimpleServerOfPortalForServiceProvider;
         thriftSimpleServerOfPortalForServiceProvider.start();
     }
 
