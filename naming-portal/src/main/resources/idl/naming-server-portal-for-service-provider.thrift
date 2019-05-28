@@ -1,7 +1,7 @@
 include "base_type.thrift"
 
 namespace java indi.joynic.naga.server.portal.serviceprovider
-namespace php Naming.Server.Potal.ServiceProvider
+namespace php Naming.Server.Portal.ServiceProvider
 
 struct RegisterArgs {
     1: required String namespace,
