@@ -1,11 +1,17 @@
+include "base_type.thrift"
+
 namespace java indi.joynic.naga.server.portal.serviceprovider
 namespace php Naming.Server.Potal.ServiceProvider
 
-typedef i32 int
-typedef i64 long
-typedef string String
-
+struct RegisterArgs {
+    1: required String namespace,
+    2: required String protocolType,
+    3: required String serviceName,
+    4: required String host,
+    5: required int port,
+    6: required int weight
+}
 
 service ThriftNamingServerPortal {
-    bool doRegister(String namespace, String protocolType, String serviceName, String host, int port, int weight);
+    bool doRegister(RegisterArgs registerArgs);
 }
