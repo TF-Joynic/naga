@@ -13,14 +13,12 @@ public class NamingRegisterTask implements Runnable {
 
     private RegisterOnServerSubjectWithThrift.AccessArgs accessArgs;
     private ThriftNamingServerPortal.Iface client;
-    private Long intervalTimeMillis;
 
     public NamingRegisterTask(RegisterOnServerSubjectWithThrift.AccessArgs accessArgs,
-                              ThriftNamingServerPortal.Iface client, Long intervalTimeMillis) {
+                              ThriftNamingServerPortal.Iface client) {
 
         this.accessArgs = accessArgs;
         this.client = client;
-        this.intervalTimeMillis = intervalTimeMillis;
     }
 
     @Override
@@ -36,7 +34,11 @@ public class NamingRegisterTask implements Runnable {
 
         boolean registerResult = accessor.access();
 
-        logger.info("thread: {} register on server result: {}",
-                Thread.currentThread().getName(), registerResult);
+        if (logger.isInfoEnabled()) {
+
+            logger.info("thread: {} register on server result: {}",
+                    Thread.currentThread().getName(), registerResult);
+
+        }
     }
 }

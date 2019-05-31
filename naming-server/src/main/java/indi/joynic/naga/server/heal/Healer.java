@@ -4,7 +4,7 @@ import indi.joynic.naga.lib.lb.node.ServiceNode;
 
 /**
  * Role which attempt to heal server node and put it back to the heath server node list.
- * It shall be an Daemon thread that heals bad server node.
+ * It shall be an Daemon thread that heals crashed server node.
  *
  * @author Terrance Fung
  * @since 1.0

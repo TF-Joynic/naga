@@ -23,13 +23,11 @@
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-lib</artifactId>
-            <version>${naming.lib.version}</version>
         </dependency>
 
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-rpc</artifactId>
-            <version>${naming.rpc.version}</version>
         </dependency>
     </dependencies>
 

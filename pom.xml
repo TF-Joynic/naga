@@ -24,7 +24,7 @@
 	<packaging>pom</packaging>
 
 	<name>naga</name>
-	<description>Naming Service by Terrance Fung (wkf.joynic@gmail.com) 2017#HangZhou with love</description>
+	<description>Naming Service by Terrance Fung (wkf.joynic@gmail.com) 2017#HangZhou with ❤</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,7 +38,7 @@
 		<naming.portal.version>0.0.1-SNAPSHOT</naming.portal.version>
 		<naming.rpc.version>0.0.1-SNAPSHOT</naming.rpc.version>
 		<apache.commons.lang3.version>3.6</apache.commons.lang3.version>
-		<tomcat-embeded-version>8.5.34</tomcat-embeded-version>
+		<tomcat-embeded-version>8.5.40</tomcat-embeded-version>
 	</properties>
 
 	<dependencyManagement>
@@ -182,5 +182,13 @@
 			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
-
+	<pluginRepositories>
+		<pluginRepository>
+			<id>aliyunMaven</id>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 </project>

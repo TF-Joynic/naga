@@ -8,22 +8,27 @@ import java.util.Set;
 /**
  * Wrapper class of ServiceNode(s)
  *
+ * A group of backend servers with totalWeight and could be iterated over.
+ *
+ * @author Terrance Fung
  * @since 1.0
  */
 public class Upstream implements Iterator<ServiceNode> {
 
     // sum of weight of all nodes
-    private final int totalWeight;
+    private int totalWeight;
 
     // all nodes of this upstream known to this very client
     private final Set<ServiceNode> nodes;
 
     public Upstream(Set<ServiceNode> serviceNodes) {
         this.nodes = serviceNodes;
+    }
 
+    public void init() {
         int sumWeight = 0;
-        if (null != serviceNodes) {
-            for (ServiceNode serviceNode : serviceNodes) {
+        if (null != nodes) {
+            for (ServiceNode serviceNode : nodes) {
                 sumWeight += serviceNode.getWeight();
             }
         }
@@ -43,6 +48,6 @@ public class Upstream implements Iterator<ServiceNode> {
 
     @Override
     public void remove() {
-
+        // TODO
     }
 }

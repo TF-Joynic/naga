@@ -20,7 +20,6 @@
         <dependency>
             <groupId>indi.joynic.naga</groupId>
             <artifactId>naming-lib</artifactId>
-            <version>${naming.lib.version}</version>
         </dependency>
 
         <dependency>

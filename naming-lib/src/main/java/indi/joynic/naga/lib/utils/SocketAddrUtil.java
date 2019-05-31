@@ -36,7 +36,6 @@ public class SocketAddrUtil {
         try {
             ip = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            e.printStackTrace();
         }
 
         return ip;
@@ -84,7 +83,6 @@ public class SocketAddrUtil {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

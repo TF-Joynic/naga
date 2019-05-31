@@ -15,7 +15,6 @@ import org.springframework.context.event.ContextStoppedEvent;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 public class NamingRegisterAtIntervalsListener implements ApplicationListener<ApplicationEvent> {
@@ -23,19 +22,12 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
     private static final Logger logger = LoggerFactory.getLogger(NamingRegisterAtIntervalsListener.class);
 
     private static final ScheduledExecutorService registerScheduledThreadPool
-            = Executors.newScheduledThreadPool(1, new ThreadFactory() {
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r);
-            thread.setName(r.getClass().getSimpleName());
-            return thread;
-        }
-    });
+            = Executors.newSingleThreadScheduledExecutor();
 
     private ThriftNamingServerPortalClient thriftNamingServerPortalClient;
     private RegisterOnServerSubjectWithThrift.AccessArgs accessArgs;
     private Long registerInterval;
+
     public NamingRegisterAtIntervalsListener(ThriftNamingServerPortalClient thriftNamingServerPortalClient,
                                              RegisterOnServerSubjectWithThrift.AccessArgs accessArgs, Long registerInterval) {
 
@@ -80,21 +72,29 @@ public class NamingRegisterAtIntervalsListener implements ApplicationListener<Ap
     private void applicationReady(ApplicationReadyEvent applicationReadyEvent) {
 
         NamingRegisterTask namingRegisterTask
-                = new NamingRegisterTask(accessArgs, thriftNamingServerPortalClient, registerInterval);
+                = new NamingRegisterTask(accessArgs, thriftNamingServerPortalClient);
 
         registerScheduledThreadPool
                 .scheduleAtFixedRate(namingRegisterTask, 5000L,
                         registerInterval, TimeUnit.MILLISECONDS);
 
-        logger.info("register listener initialized! "
-                + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
+        if (logger.isInfoEnabled()) {
+
+            logger.info("register listener initialized! "
+                    + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
+
+        }
     }
 
     public void contextStopped(ContextStoppedEvent contextStoppedEvent) {
         registerScheduledThreadPool.shutdown();
 
-        logger.info("register listener destroyed! "
-                + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
+        if (logger.isInfoEnabled()) {
+
+            logger.info("register listener destroyed! "
+                    + DateTimeUtil.date(DateTimeUtil.DATETIME_MILLIS));
+
+        }
     }
 
 

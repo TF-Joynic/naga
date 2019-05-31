@@ -6,6 +6,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * 时间工具类
+ *
+ * @author Terrance Fung
+ */
 public final class DateTimeUtil {
 
     public static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -31,6 +36,10 @@ public final class DateTimeUtil {
         return currentValue;
     }
 
+    private static void clearThreadLocalValue() {
+        threadLocalJar.remove();
+    }
+
     public static String date(String pattern) {
         return date(System.currentTimeMillis(), pattern);
     }
@@ -54,10 +63,10 @@ public final class DateTimeUtil {
             Date date = new Date(timestamp);
             return df.format(date);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(e);
+        } finally {
+            clearThreadLocalValue();
         }
-
-        return null;
     }
 
     public static String date(Date date, String pattern) {
@@ -70,10 +79,10 @@ public final class DateTimeUtil {
             df = getCurrentThreadLocalValue(pattern);
             return df.format(date);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(e);
+        } finally {
+            clearThreadLocalValue();
         }
-
-        return null;
     }
 
     /**
@@ -106,6 +115,13 @@ public final class DateTimeUtil {
         return -1 != millisRet ? millisRet / 1000 : -1;
     }
 
+    /**
+     * Fetch timeMillis from date string like '2000-05-05 00:00:00' etc
+     *
+     * @param str
+     * @param pattern
+     * @return 13-digit long like 1367704800000L
+     */
     public static long strToTimeMillis(String str, String pattern) {
         if (null == pattern) {
             pattern = DEFAULT_PATTERN;
@@ -120,12 +136,21 @@ public final class DateTimeUtil {
                 return date.getTime();
             }
         } catch (IllegalArgumentException | ParseException e) {
-            e.printStackTrace();
+            return -1;
+        } finally {
+            clearThreadLocalValue();
         }
 
         return -1;
     }
 
+    /**
+     * to float val of this date str
+     *
+     * @param str
+     * @param pattern
+     * @return 1367704800.105D
+     */
     public static double strToTimeFloat(String str, String pattern) {
         long ret = strToTimeMillis(str, pattern);
         return -1 != ret ? ret / 1000D : -1;
@@ -136,14 +161,16 @@ public final class DateTimeUtil {
      *
      * @return 10 digit unix time
      */
-    public static synchronized long getDayStartingTime() {
-        Calendar cld = Calendar.getInstance();
-        cld.set(Calendar.HOUR_OF_DAY, 0);
-        cld.set(Calendar.MINUTE, 0);
-        cld.set(Calendar.SECOND, 0);
-        cld.set(Calendar.MILLISECOND, 0);
+    public static long getDayStartingTime() {
+        synchronized (Calendar.class) {
+            Calendar cld = Calendar.getInstance();
+            cld.set(Calendar.HOUR_OF_DAY, 0);
+            cld.set(Calendar.MINUTE, 0);
+            cld.set(Calendar.SECOND, 0);
+            cld.set(Calendar.MILLISECOND, 0);
 
-        return cld.getTimeInMillis() / 1000;
+            return cld.getTimeInMillis() / 1000L;
+        }
     }
 
     /**
@@ -152,7 +179,7 @@ public final class DateTimeUtil {
      */
     public static long getDayStartingTime(String dateTimeStr, String pattern) {
         if (null == dateTimeStr) {
-            throw new NullPointerException("dateTimeStr can not be null");
+            throw new IllegalArgumentException("dateTimeStr can not be null");
         }
 
         if (null == pattern) {
@@ -204,6 +231,8 @@ public final class DateTimeUtil {
             sdf.parse(date);
         } catch (ParseException e) {
             return false;
+        } finally {
+            clearThreadLocalValue();
         }
 
         return true;
@@ -259,10 +288,6 @@ public final class DateTimeUtil {
         }
 
         pattern = ensureString(pattern, DEFAULT_DATE_PATTERN);
-        if (- 1 != strToTime(date, pattern)) {
-            return true;
-        }
-
-        return false;
+        return -1 != strToTime(date, pattern);
     }
 }
