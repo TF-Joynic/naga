@@ -11,8 +11,6 @@ import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -53,7 +51,7 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
             tArgs.protocolFactory(protocolFactory/*new TBinaryProtocol.Factory()*/);
             tServer = new TSimpleServer(tArgs);
 
-            logger.warn("ThriftSimpleServerOfPortalForServiceProvider started and try serve at port: {}", serverPort);
+            logger.warn("ThriftSimpleServerOfPortalForServiceProvider started at port: {}", serverPort);
             tServer.serve();
         } catch (TTransportException e) {
             logger.error("ThriftSimpleServerOfPortalForServiceProvider start failed!", e);
@@ -69,6 +67,5 @@ public class ThriftSimpleServerOfPortalForServiceProvider extends AbstractServer
     protected void doStop() {
         tServer.stop();
     }
-
 
 }
